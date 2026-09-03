@@ -1,0 +1,34 @@
+name: validate-user-benchmarks
+
+# Community submissions flow: PRs that add entries to user_benchmarks.json.
+# Only this file is ingested; the workflow fails if a PR modifies anything else.
+on:
+  pull_request:
+    paths:
+      - 'user_benchmarks.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (PR head)
+        uses: actions/checkout@v4
+
+      - name: Guard — only user_benchmarks.json may change
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          echo "changed files:"; echo "$CHANGED"
+          BAD=$(echo "$CHANGED" | grep -v '^user_benchmarks\.json$' || true)
+          if [ -n "$BAD" ]; then
+            echo "::error::PRs may only modify user_benchmarks.json. Offending files:"
+            echo "$BAD"
+            exit 1
+          fi
+
+      - name: Validate entries
+        env:
+          GITHUB_PR_ACTOR: ${{ github.actor }}
+        run: python3 scripts/validate_user_benchmarks.py

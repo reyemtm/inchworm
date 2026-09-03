@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "description": "Inchworm roster: laptop-level open coding LLMs <=14B. Benchmarked entries mirror the models array in index.html; candidates are newer models with no verifiable pass@1 coding benchmarks yet.",
+    "snapshot": "2026-09-03",
+    "sources": [
+      "https://evalplus.github.io/leaderboard.html",
+      "https://huggingface.co/datasets/bigcode/bigcodebench-results",
+      "official model cards (HumanEval pairs)",
+      "local self-evals (scripts/local_eval.py)"
+    ],
+    "scores_are": "pass@1 percentages",
+    "local_eval_is": "HumanEval+ from our own runs: plain chatml, greedy, official EvalPlus evaluator"
+  },
+  "leader": {
+    "name": "GPT-4o-2024-05-13",
+    "org": "OpenAI",
+    "params": null,
+    "bcb": 51.1,
+    "bcb_hard": 25.0,
+    "bcb_mode": "instruct",
+    "note": "Pinned overall BigCodeBench leader across all sizes — reference row, not laptop-runnable",
+    "url": "https://openai.com/index/hello-gpt-4o/"
+  },
+  "benchmarked": [
+    { "name": "Qwen2.5-Coder-14B-Instruct", "org": "Qwen", "params": 14, "fit": "max", "plus": 75.9, "base": 84.1, "bcb": 48.2, "bcb_hard": 23.6, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-14B-Instruct" },
+    { "name": "OpenCoder-8B-Instruct", "org": "Infly", "params": 8, "fit": "mid", "plus": 77.4, "base": 81.7, "bcb": 43.2, "bcb_hard": 18.2, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/infly/OpenCoder-8B-Instruct" },
+    { "name": "Phi-4", "org": "Microsoft", "params": 14, "fit": "max", "plus": null, "base": 82.6, "bcb": 45.5, "bcb_hard": 24.3, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/microsoft/phi-4" },
+    { "name": "Qwen2.5-Coder-7B-Instruct", "org": "Qwen", "params": 7, "fit": "mid", "plus": 73.8, "base": 88.4, "bcb": 40.4, "bcb_hard": 20.3, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct" },
+    { "name": "CodeQwen1.5-7B-Chat", "org": "Qwen", "params": 7, "fit": "mid", "plus": 78.7, "base": 83.5, "bcb": 39.6, "bcb_hard": 18.9, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/Qwen/CodeQwen1.5-7B-Chat" },
+    { "name": "DeepCoder-14B-Preview", "org": "Agentica", "params": 14, "fit": "max", "plus": null, "base": null, "bcb": 38.2, "bcb_hard": 18.2, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/agentica-org/DeepCoder-14B-Preview" },
+    { "name": "Yi-Coder-9B-Chat", "org": "01.AI", "params": 9, "fit": "heavy", "plus": 71.9, "base": 79.8, "bcb": 38.1, "bcb_hard": 15.9, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/01-ai/Yi-Coder-9B-Chat" },
+    { "name": "Magicoder-S-DS-6.7B", "org": "ISE-UIUC", "params": 6.7, "fit": "mid", "plus": 71.3, "base": 76.8, "bcb": 36.2, "bcb_hard": 13.5, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/ise-uiuc/Magicoder-S-DS-6.7B" },
+    { "name": "DeepSeek-Coder-6.7B-Instruct", "org": "DeepSeek", "params": 6.7, "fit": "mid", "plus": 71.3, "base": 74.4, "bcb": 35.5, "bcb_hard": 10.1, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-instruct" },
+    { "name": "OpenCoder-1.5B-Instruct", "org": "Infly", "params": 1.5, "fit": "easy", "plus": 67.7, "base": 72.5, "bcb": 34.9, "bcb_hard": 9.5, "bcb_mode": "instruct", "local": 58.5, "url": "https://huggingface.co/infly/OpenCoder-1.5B-Instruct" },
+    { "name": "Llama-3.1-8B-Instruct", "org": "Meta", "params": 8, "fit": "mid", "plus": 62.8, "base": 69.5, "bcb": 32.8, "bcb_hard": 13.5, "bcb_mode": "instruct", "local": null, "url": "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct" },
+    { "name": "Qwen2.5-Coder-3B-Instruct", "org": "Qwen", "params": 3, "fit": "easy", "plus": 68.4, "base": 83.5, "bcb": null, "bcb_hard": null, "bcb_mode": null, "local": null, "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct" },
+    { "name": "Phi-3.5-mini-instruct", "org": "Microsoft", "params": 3.8, "fit": "easy", "plus": 63.4, "base": 68.9, "bcb": null, "bcb_hard": null, "bcb_mode": null, "local": null, "url": "https://huggingface.co/microsoft/Phi-3.5-mini-instruct" },
+    { "name": "CodeGemma-7B-it", "org": "Google", "params": 7, "fit": "mid", "plus": 66.5, "base": 74.3, "bcb": null, "bcb_hard": null, "bcb_mode": null, "local": null, "url": "https://huggingface.co/google/codegemma-7b-it" },
+    { "name": "CodeLlama-7b-Instruct", "org": "Meta", "params": 7, "fit": "mid", "plus": 60.3, "base": 66.5, "bcb": null, "bcb_hard": null, "bcb_mode": null, "local": null, "url": "https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf" },
+    { "name": "Qwen2.5-Coder-1.5B-Instruct", "org": "Qwen", "params": 1.5, "fit": "easy", "plus": 56.8, "base": 72.1, "bcb": 27.0, "bcb_hard": 5.4, "bcb_mode": "instruct", "local": 59.8, "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct" },
+    { "name": "StarCoder2-7B", "org": "BigCode", "params": 7, "fit": "mid", "plus": 55.3, "base": 64.2, "bcb": 27.7, "bcb_hard": 8.8, "bcb_mode": "complete", "local": null, "url": "https://huggingface.co/bigcode/starcoder2-7b" },
+    { "name": "StarCoder2-3B", "org": "BigCode", "params": 3, "fit": "easy", "plus": 52.3, "base": 61.6, "bcb": 23.4, "bcb_hard": 6.4, "bcb_mode": "complete", "local": null, "url": "https://huggingface.co/bigcode/starcoder2-3b" },
+    { "name": "Phi-3-mini-4k-instruct", "org": "Microsoft", "params": 3.8, "fit": "easy", "plus": 59.1, "base": 64.6, "bcb": null, "bcb_hard": null, "bcb_mode": null, "local": null, "url": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct" },
+    { "name": "Mistral-7B-Instruct-v0.2", "org": "Mistral", "params": 7, "fit": "mid", "plus": null, "base": null, "bcb": null, "bcb_hard": null, "bcb_mode": null, "local": null, "url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2" }
+  ],
+  "candidates_no_benchmarks": {
+    "_note": "Newer models (2025-2026) absent from every machine feed (EvalPlus frozen early 2025, BigCodeBench frozen Apr 2025). No consolidated pass@1 source exists; would need card research or local runs (scripts/local_eval.py).",
+    "found_via": "Ollama library audit (https://ollama.com/library?sort=newest)",
+    "models": [
+      { "name": "Qwen3-14B", "org": "Qwen", "params": 14, "released": "2025-04", "type": "general (hybrid thinking)", "ollama": "qwen3:14b" },
+      { "name": "Qwen3-8B", "org": "Qwen", "params": 8, "released": "2025-04", "type": "general (hybrid thinking)", "ollama": "qwen3:8b" },
+      { "name": "Qwen3-4B", "org": "Qwen", "params": 4, "released": "2025-04", "type": "general (hybrid thinking)", "ollama": "qwen3:4b" },
+      { "name": "Qwen3.5-9B", "org": "Qwen", "params": 9, "released": "2026", "type": "general (multimodal/thinking)", "ollama": "qwen3.5:9b" },
+      { "name": "Qwen3.5-4B", "org": "Qwen", "params": 4, "released": "2026", "type": "general (multimodal/thinking)", "ollama": "qwen3.5:4b" },
+      { "name": "Gemma-3-12B", "org": "Google", "params": 12, "released": "2025-03", "type": "general (multimodal)", "ollama": "gemma3:12b" },
+      { "name": "Gemma-3-4B", "org": "Google", "params": 4, "released": "2025-03", "type": "general (multimodal)", "ollama": "gemma3:4b" },
+      { "name": "Gemma-4-12B", "org": "Google", "params": 12, "released": "2026", "type": "general (vision/tools/thinking)", "ollama": "gemma4:12b" },
+      { "name": "DeepSeek-R1-Distill-Qwen-14B", "org": "DeepSeek", "params": 14, "released": "2025-01", "type": "reasoning distill", "ollama": "deepseek-r1:14b", "note": "In frozen BigCodeBench feed (38.1 instruct); LiveCodeBench pass@1 53.8 per DeepSeek report" },
+      { "name": "DeepSeek-R1-Distill-Llama-8B", "org": "DeepSeek", "params": 8, "released": "2025-01", "type": "reasoning distill", "ollama": "deepseek-r1:8b", "note": "In frozen BigCodeBench feed (10.6 instruct)" },
+      { "name": "Phi-4-reasoning", "org": "Microsoft", "params": 14, "released": "2025", "type": "reasoning (code/math strong)", "ollama": "phi4-reasoning", "note": "Card reports LiveCodeBench/AIME; HumanEvalPlus 83.5 on phi-4-plus variant" },
+      { "name": "Phi-4-mini-reasoning", "org": "Microsoft", "params": 3.8, "released": "2025", "type": "reasoning", "ollama": "phi4-mini-reasoning" },
+      { "name": "Granite-4.2-8B", "org": "IBM", "params": 8, "released": "2026", "type": "enterprise (coding/RAG/tools)", "ollama": "granite4.2:8b", "note": "Card reports LiveCodeBench v6 + AIME25; no HumanEval" },
+      { "name": "Granite-4.2-3B", "org": "IBM", "params": 3, "released": "2026", "type": "enterprise", "ollama": "granite4.2:3b" },
+      { "name": "Granite-4.1-8B", "org": "IBM", "params": 8, "released": "2026", "type": "enterprise", "ollama": "granite4.1:8b" },
+      { "name": "Granite-4.1-3B", "org": "IBM", "params": 3, "released": "2026", "type": "enterprise", "ollama": "granite4.1:3b" },
+      { "name": "Ministral-3-14B", "org": "Mistral", "params": 14, "released": "2026", "type": "edge deployment", "ollama": "ministral-3:14b" },
+      { "name": "Ministral-3-8B", "org": "Mistral", "params": 8, "released": "2026", "type": "edge deployment", "ollama": "ministral-3:8b" },
+      { "name": "Ministral-3-3B", "org": "Mistral", "params": 3, "released": "2026", "type": "edge deployment", "ollama": "ministral-3:3b" },
+      { "name": "Ornith-1.5-9B", "org": "Ornith", "params": 9, "released": "2026", "type": "foundation (self-improvement-trained)", "ollama": "ornith-1.5:9b", "note": "Card reports only SWE-bench Verified/Pro (agentic paradigm, no pass@1)" },
+      { "name": "Cogito-14B", "org": "Deep Cogito", "params": 14, "released": "2025", "type": "reasoning", "ollama": "cogito:14b" },
+      { "name": "Cogito-8B", "org": "Deep Cogito", "params": 8, "released": "2025", "type": "reasoning", "ollama": "cogito:8b" },
+      { "name": "OLMo-3-7B", "org": "Ai2", "params": 7, "released": "2026", "type": "fully-open research", "ollama": "olmo-3:7b" },
+      { "name": "OpenThinker-7B", "org": "Open Thoughts", "params": 7, "released": "2025", "type": "reasoning distill", "ollama": "openthinker:7b" },
+      { "name": "MiniCPM-V-4.5-8B", "org": "OpenBMB", "params": 8, "released": "2026", "type": "multimodal/VLM (flag if added)", "ollama": "minicpm-v4.5:8b", "note": "No code pass@1 at all" }
+    ]
+  }
+}

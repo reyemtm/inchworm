@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "description": "Community-submitted local HumanEval+ runs. Append one entry per run to `entries`. PRs touching only this file are auto-validated by CI. When a model accumulates >= PROMOTION_THRESHOLD entries from distinct users, maintainers aggregate them into the `local` field in index.html (see scripts/promote_user_benchmarks.py).",
+    "schema": {
+      "model": "model name EXACTLY as it appears in index.html (models.json 'name')",
+      "hf_id": "Hugging Face repo id you ran",
+      "user": "github username (must match PR author)",
+      "date": "YYYY-MM-DD the run finished",
+      "hardware": "free-text, e.g. 'M2 Pro 32GB (MPS)'",
+      "precision": "dtype used, e.g. bf16, q4_K_M (gguf), gptq-4bit",
+      "runtime": "transformers|llama.cpp|ollama|vllm|mlx",
+      "humaneval_plus": "pass@1 percent, 0-100",
+      "humaneval": "pass@1 percent, 0-100 (optional)",
+      "notes": "prompt format, evaluator used, caveats (optional)"
+    },
+    "rules": [
+      "one entry per run; re-runs by the same user replace their earlier entry for that model",
+      "humaneval_plus must be from the official EvalPlus evaluator (or equivalent harness counting base+extra tests)",
+      "greedy (temp 0) runs strongly preferred; note if sampled"
+    ],
+    "PROMOTION_THRESHOLD": 3,
+    "entries": [
+      {
+        "model": "OpenCoder-1.5B-Instruct",
+        "hf_id": "infly/OpenCoder-1.5B-Instruct",
+        "user": "reyemtm",
+        "date": "2026-09-03",
+        "hardware": "M2 Pro 32GB (MPS)",
+        "precision": "bf16",
+        "runtime": "transformers",
+        "humaneval_plus": 58.5,
+        "humaneval": 59.8,
+        "notes": "plain chatml prompt, greedy; official EvalPlus evaluator"
+      },
+      {
+        "model": "Qwen2.5-Coder-1.5B-Instruct",
+        "hf_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "user": "reyemtm",
+        "date": "2026-09-03",
+        "hardware": "M2 Pro 32GB (MPS)",
+        "precision": "bf16",
+        "runtime": "transformers",
+        "humaneval_plus": 59.8,
+        "humaneval": 63.4,
+        "notes": "plain chatml prompt, greedy; official EvalPlus evaluator"
+      }
+    ]
+  }
+}

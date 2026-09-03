@@ -1,0 +1,47 @@
+name: nightly-snapshot
+
+# Refresh the leaderboard snapshot on demand from the Actions tab.
+#
+# SCHEDULE DISABLED: both upstream feeds are frozen (BigCodeBench results stop
+# 2025-04-14, EvalPlus earlier), so nightly runs were guaranteed no-ops.
+# Re-enable the cron below if either feed resumes publishing.
+on:
+  workflow_dispatch: {}    # manual "Run workflow" trigger
+# schedule:
+#   - cron: '17 3 * * *'   # 03:17 UTC nightly  (uncomment to re-enable)
+
+permissions:
+  contents: write          # needed to commit the refreshed index.html
+
+concurrency:
+  group: nightly-snapshot
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Scrape fresh scores
+        run: python3 scripts/scrape_scores.py
+
+      - name: Commit refreshed snapshot
+        env:
+          BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          if git diff --quiet index.html; then
+            echo "No score changes — snapshot already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "$BOT_EMAIL"
+          git add index.html
+          git commit -m "chore: refresh leaderboard snapshot"
+          git push

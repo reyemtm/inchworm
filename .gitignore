@@ -1,0 +1,12 @@
+.freebuff/
+__pycache__/
+.eval/
+.index.html.*.tmp
+.DS_Store
+**/.DS_Store
+*.swp
+*.pyc
+.venv/
+venv/
+Thumbs.db
+*.log
