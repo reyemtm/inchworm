@@ -8,6 +8,7 @@ pending and what would change without touching anything.
 
 Usage:
     python3 scripts/local_batch.py              # interactive run-all
+    python3 scripts/local_batch.py --auto       # run-all unattended: eval -> record -> delete weights -> next
     python3 scripts/local_batch.py --only KEY   # just one specific model
     python3 scripts/local_batch.py --dry-run    # show pending work, change nothing
 
@@ -93,6 +94,19 @@ def update_json(name, plus, base):
 
 
 # ------------------------------------------------------------------ run ----
+def delete_weights(hf_id):
+    """Remove a model's snapshot from the local Hugging Face cache (reclaim disk)."""
+    repo_dir = os.path.expanduser(os.path.join(
+        "~", ".cache", "huggingface", "hub", "models--" + hf_id.replace("/", "--")))
+    if os.path.isdir(repo_dir):
+        import shutil
+        size = subprocess.run(["du", "-sh", repo_dir], capture_output=True, text=True).stdout.split()[0]
+        shutil.rmtree(repo_dir)
+        print(f"[batch] deleted HF cache for {hf_id} ({size} reclaimed)")
+    else:
+        print(f"[batch] no HF cache for {hf_id} — nothing to delete")
+
+
 def run_model(key):
     hf_id, slug, targets = cli.MODELS[key]
     proc = subprocess.Popen(
@@ -112,6 +126,20 @@ def run_model(key):
     return proc.returncode
 
 
+def model_display_name(key):
+    """Map a registry key to the display name used in index.html/models.json."""
+    return DISPLAY_NAMES.get(key, key)
+
+
+DISPLAY_NAMES = {
+    "qwen3-8b": "Qwen3-8B",
+    "cogito-8b": "Cogito-v1-preview-llama-8B",
+    "granite-3.3-8b": "Granite-3.3-8B-Instruct",
+    "ministral-8b": "Ministral-8B-Instruct-2410",
+    "ds-r1-distill-llama-8b": "DeepSeek-R1-Distill-Llama-8B",
+}
+
+
 def prompt_continue(key, next_key):
     while True:
         ans = input(f"\n[batch] {key} done. Run next model '{next_key}'? [y/N/q] ").strip().lower()
@@ -129,6 +157,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--only", help="run just this model key and exit")
+    ap.add_argument("--auto", action="store_true",
+                    help="run all pending models back-to-back: eval -> record scores -> "
+                         "delete weights -> next, with no prompts")
     ap.add_argument("--dry-run", action="store_true",
                     help="show pending/completed runs and what would change; touch nothing")
     args = ap.parse_args()
@@ -175,15 +206,21 @@ def main():
         if not res:
             print(f"[batch] {key} finished but no eval results found (rc={rc}) — "
                   f"check `python3 scripts/local_eval.py logs`")
+            if args.auto:
+                continue
             if i < len(queue) - 1 and not prompt_continue(key, queue[i + 1]):
                 break
             continue
         plus, base = res
         print(f"\n[batch] {key} RESULTS: HumanEval+ {plus:.1f} · HumanEval {base:.1f}")
-        h = update_html(name, plus)
-        j = update_json(name, plus, base)
+        display_name = model_display_name(key)
+        h = update_html(display_name, plus)
+        j = update_json(display_name, plus, base)
         print(f"[batch] updated: index.html local field ({'ok' if h else 'skipped'}), "
               f"models.json ({'ok' if j else 'skipped'})")
+        if args.auto:
+            delete_weights(hf_id)
+            continue
         if i < len(queue) - 1 and not prompt_continue(key, queue[i + 1]):
             print(f"[batch] stopping — {len(queue) - i - 1} model(s) remain pending")
             break
