@@ -2,9 +2,10 @@
 """Sequential local HumanEval+ benchmark driver.
 
 Runs the pending 8B-class candidates one at a time. After each run completes
-it updates `index.html` (adds/refreshes the `local:` field) and `models.json`,
-then asks whether to continue to the next model. `--dry-run` shows what is
-pending and what would change without touching anything.
+it updates `models.json` (adds/refreshes the `local:` field) and rebuilds
+`index.html` from it via scripts/build_page.py, then asks whether to continue
+to the next model. `--dry-run` shows what is pending and what would change
+without touching anything.
 
 Usage:
     python3 scripts/local_batch.py              # interactive run-all
@@ -19,7 +20,6 @@ model on an M2 Pro (MPS), mostly generation.
 import argparse
 import json
 import os
-import re
 import subprocess
 import sys
 import time
@@ -27,9 +27,9 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import local_eval as cli  # reuse registry, venv setup, launcher
+import build_page as bp   # rebuild index.html from models.json
 
 OUT = cli.OUT
-HTML = os.path.join(ROOT, "index.html")
 JSON_PATH = os.path.join(ROOT, "models.json")
 
 # The 8B-class candidate batch, in run order.
@@ -63,23 +63,8 @@ def samples_complete(slug):
 
 
 # ---------------------------------------------------------------- update ----
-def update_html(name, plus):
-    """Set the `local:` field on a model's row in index.html; returns True if changed."""
-    src = open(HTML).read()
-    # match the object whose name:'<name>' — insert/replace local: before best:'
-    pat = re.compile(r"(\{ name:'" + re.escape(name) + r"'[^}]*?)(local:\s*[0-9.]+,\s*)?(best:')")
-    m = pat.search(src)
-    if not m:
-        print(f"[html] WARNING: no row matching name:'{name}' — skipped")
-        return False
-    new = f"{m.group(1)}local:{round(plus, 1)}, {m.group(3)}"
-    if m.group(0) == new:
-        return False
-    open(HTML, "w").write(src[:m.start()] + new + src[m.end():])
-    return True
-
-
-def update_json(name, plus, base):
+def update_json(name, plus):
+    """Set the `local:` field on a model's row in models.json; returns True if changed."""
     d = json.load(open(JSON_PATH))
     for row in d["benchmarked"]:
         if row["name"] == name:
@@ -88,9 +73,13 @@ def update_json(name, plus, base):
     else:
         print(f"[json] WARNING: '{name}' not in models.json benchmarked[] — skipped")
         return False
-    json.dump(d, open(JSON_PATH, "w"), indent=2)
-    open(JSON_PATH, "a").write("\n")
+    bp._atomic_write(JSON_PATH, json.dumps(d, indent=2, ensure_ascii=False) + "\n")
     return True
+
+
+def rebuild_page():
+    """Regenerate index.html's data consts from the updated models.json."""
+    bp.rebuild(json_path=JSON_PATH)
 
 
 # ------------------------------------------------------------------ run ----
@@ -192,7 +181,7 @@ def main():
                 print(f"  {key}: already done ({detail}) — would skip")
             else:
                 print(f"  {key}: would generate + evaluate ~35-45 min, "
-                      f"then set local: in index.html + models.json")
+                      f"then set local: in models.json and rebuild index.html")
         return 0
 
     for i, key in enumerate(queue):
@@ -214,10 +203,11 @@ def main():
         plus, base = res
         print(f"\n[batch] {key} RESULTS: HumanEval+ {plus:.1f} · HumanEval {base:.1f}")
         display_name = model_display_name(key)
-        h = update_html(display_name, plus)
-        j = update_json(display_name, plus, base)
-        print(f"[batch] updated: index.html local field ({'ok' if h else 'skipped'}), "
-              f"models.json ({'ok' if j else 'skipped'})")
+        j = update_json(display_name, plus)
+        if j:
+            rebuild_page()
+        print(f"[batch] updated: models.json local field "
+              f"({'ok' if j else 'skipped'}) — index.html rebuilt from it")
         if args.auto:
             delete_weights(hf_id)
             continue

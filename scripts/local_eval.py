@@ -13,6 +13,7 @@ Usage:
 Models (name -> HF id + page snapshot values for the summary):
     opencoder-1.5b      infly/OpenCoder-1.5B-Instruct      HE+ 67.7 / HE 72.5 / BCB 34.9
     qwen2.5-coder-1.5b  Qwen/Qwen2.5-Coder-1.5B-Instruct  HE+ 56.8 / HE 72.1 / BCB 27.0
+    qwen3-1.7b          Qwen/Qwen3-1.7B                  HE+ 73.6 claimed (SOTA2, suspect)
 """
 import argparse
 import json
@@ -48,6 +49,11 @@ MODELS = {
     "qwen3-8b": (
         "Qwen/Qwen3-8B", "qwen3-8b",
         dict(plus=None, base=None, bcb=None),
+    ),
+    # --- tiny third-party claims that deserve our own check ---
+    "qwen3-1.7b": (
+        "Qwen/Qwen3-1.7B", "qwen3-1.7b",
+        dict(plus=73.6, base=None, bcb=None),  # 73.6 HE+ is the SOTA2 claim under test
     ),
     "cogito-8b": (
         "deepcogito/cogito-v1-preview-llama-8B", "cogito-v1-preview-llama-8b",

@@ -2,9 +2,10 @@
 """Promote crowd-verified local evals into the leaderboard.
 
 Groups user_benchmarks.json entries by model; when a model has >= 3 entries
-from distinct users, writes the median HumanEval+ into index.html's `local`
-field and models.json, and marks the entries as promoted. --dry-run reports
-what qualifies without touching anything.
+from distinct users, writes the median HumanEval+ into the `local` field of
+models.json and rebuilds index.html from it (scripts/build_page.py), then
+marks the entries as promoted. --dry-run reports what qualifies without
+touching anything.
 
 Usage:
     python3 scripts/promote_user_benchmarks.py [--dry-run] [--threshold N]
@@ -17,7 +18,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
-import local_batch as batch  # reuse update_html / update_json
+import local_batch as batch  # reuse update_json / rebuild_page
 
 
 def main():
@@ -57,31 +58,21 @@ def main():
 
     changed = False
     for model, plus, users, entries in promoted:
-        if batch.update_html(model, plus):
-            changed = True
-        # models.json name may differ (HF-style); try exact then fuzzy
-        jf = os.path.join(ROOT, "models.json")
-        jd = json.load(open(jf))
-        row = next((r for r in jd["benchmarked"] if r["name"] == model), None)
-        if row is None:
-            row = next((r for r in jd["benchmarked"]
-                        if r["name"].lower().replace("-", "") == model.lower().replace("-", "")), None)
-        if row is not None:
-            row["local"] = round(plus, 1)
-            json.dump(jd, open(jf, "w"), indent=2)
-            open(jf, "a").write("\n")
+        if batch.update_json(model, plus):
             changed = True
         else:
-            print(f"[promote] WARNING: '{model}' not found in models.json — html only")
+            print(f"[promote] WARNING: '{model}' not found in models.json benchmarked[] — skipped")
         # tag entries so they aren't double-counted as fresh signal later
         for e in entries:
             e["promoted"] = True
         print(f"[promote] {model}: local={plus:.1f} (median of {len(users)} users)")
 
     if changed:
+        batch.rebuild_page()
         json.dump(d, open(path, "w"), indent=2)
         open(path, "a").write("\n")
-        print("[promote] wrote user_benchmarks.json (entries flagged promoted=true)")
+        print("[promote] wrote user_benchmarks.json (entries flagged promoted=true) "
+              "and rebuilt index.html from models.json")
     else:
         print("[promote] nothing to promote")
     return 0
