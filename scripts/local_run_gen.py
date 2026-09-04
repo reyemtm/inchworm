@@ -42,10 +42,19 @@ def main():
 
     tok = AutoTokenizer.from_pretrained(args.model, use_fast=False,
                                         trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model, device_map="auto", trust_remote_code=True,
-        torch_dtype=torch.bfloat16, attn_implementation="eager",
-    ).to("mps")
+    device = "mps"
+    try:
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model, device_map="mps", trust_remote_code=True,
+            torch_dtype=torch.bfloat16, attn_implementation="eager",
+        )
+    except Exception as e:  # OOM / MPS unsupported ops on some machines
+        print(f"[gen] MPS load failed ({type(e).__name__}: {e}); falling back to CPU", flush=True)
+        device = "cpu"
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model, device_map="cpu", trust_remote_code=True,
+            torch_dtype=torch.float32, attn_implementation="eager",
+        )
     model.eval()
     print("[gen] model loaded on", model.device, flush=True)
 
@@ -59,7 +68,7 @@ def main():
         print(f"[gen] resuming: {len(done)} already done", flush=True)
 
     def generate(prompt_text: str, max_new: int) -> str:
-        ids = tok(prompt_text, return_tensors="pt").to("mps")
+        ids = tok(prompt_text, return_tensors="pt").to(device)
         with torch.inference_mode():
             out = model.generate(
                 input_ids=ids["input_ids"], attention_mask=ids["attention_mask"],
@@ -75,6 +84,7 @@ def main():
             prompt = tok.apply_chat_template(
                 [{"role": "user", "content": task["prompt"].strip()}],
                 tokenize=False, add_generation_prompt=True,
+                enable_thinking=False,  # no-op for non-thinking models (Qwen3, R1 distills)
             )
             raw = generate(prompt, args.max_new_tokens)
             # evalplus's sanitize runs code_extract internally, which finds the

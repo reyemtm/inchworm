@@ -1,4 +1,5 @@
 .freebuff/
+AGENTS.md
 __pycache__/
 .eval/
 .index.html.*.tmp
