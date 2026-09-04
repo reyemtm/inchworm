@@ -418,6 +418,21 @@
       "best": "The strongest 9B on BigCodeBench among non-Qwen coders.",
       "note": "CodeGeeX4-All-9B (THUDM/Zhipu): fills the BigCodeBench column at 40.0 (Hard 18.9) from the feed; no EvalPlus HumanEval+ run exists, so that cell shows —.",
       "url": "https://huggingface.co/zai-org/codegeex4-all-9b"
+    },
+    {
+      "name": "Granite-4.2-3B",
+      "org": "IBM",
+      "released": "2026",
+      "params": 3,
+      "plus": 70.7,
+      "base": 74.4,
+      "fit": "easy",
+      "memory": "~1.8 GB @ 4-bit",
+      "local": 70.7,
+      "plus_source": "self-eval",
+      "best": "Fresh local eval result.",
+      "note": "HumanEval scores from local self-evaluation run.",
+      "url": "https://huggingface.co/ibm-granite/granite-4.2-3b"
     }
   ],
   "pending": [
@@ -567,16 +582,6 @@
       "ollama": "granite4.2:8b",
       "note": "Card reports LiveCodeBench v6 + AIME25; no HumanEval",
       "url": "https://huggingface.co/ibm-granite/granite-4.2-8b"
-    },
-    {
-      "name": "Granite-4.2-3B",
-      "org": "IBM",
-      "params": 3,
-      "fit": "easy",
-      "released": "2026",
-      "type": "enterprise",
-      "ollama": "granite4.2:3b",
-      "url": "https://huggingface.co/ibm-granite/granite-4.2-3b"
     },
     {
       "name": "Ministral-3-14B",
