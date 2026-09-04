@@ -8,15 +8,23 @@ A laptop-level leaderboard for open coding models at **≤14B parameters**.
 
 ## Features
 
-- **BigCodeBench** — the primary lens (Full-set pass@1, instruct lens; `complete` for base models). The ★ row pins the overall leader across all sizes for scale.
+- **BigCodeBench** — the primary lens (Full-set pass@1, instruct lens; `complete` for base models).
 - **HumanEval+** / **Delta** — toggleable HumanEval+ view and its delta vs. plain HumanEval.
 - **Local eval** — HumanEval+ measured from our own self-evaluated runs on this machine, a directional check on vendor numbers.
 - **Local fit** — `easy` / `mid` / `heavy` / `max spec (14B, 24GB+)` tiers plus quantized memory estimates.
+- **Freshness badges** — clearly separates the current model catalog from historical HumanEval+ and BigCodeBench score snapshots.
+- **Pending Eval tab** — newly released small models can be listed without inventing scores, while community members are invited to run and submit comparable HumanEval+ results.
 - **Dark/light themes**, live search, and per-column sorting — all in vanilla JS.
 
 ## Sources & methodology
 
-Scores are compiled from public model reports, the EvalPlus leaderboard, and the BigCodeBench results datasets (both frozen as of Apr 2025). New numbers come from our own local runs — see the footer of the page for the full source list and methodology.
+The model catalog is checked separately from benchmark freshness. HumanEval+ is a historical snapshot, and BigCodeBench results are frozen around April 2025; newer models may appear in the **Pending Eval** tab with blank scores until a comparable result is available. The HF Open SLM leaderboard can help discover candidates, but its scores are not copied into the coding table because its tasks, harness, prompts, and evaluation conditions are different. Community submissions should use the official EvalPlus evaluator and include enough runtime, hardware, precision, model revision, and prompt details to be useful.
+
+The roster lives in `models.json`; the page's data layer is regenerated from it with `python3 scripts/build_page.py`, so the shipped `index.html` stays a single self-contained file.
+
+## Why these benchmarks?
+
+The big leaderboards moved to agentic, human-preference, and anti-contamination suites because static single-turn sets like HumanEval got saturated and contaminated at frontier scale. But small ≤14B laptop models haven't saturated HumanEval+/BigCodeBench, single-turn completion is how you actually use a 7B on a laptop, and agentic harnesses aren't practical there. So this page sticks with measured pass@1 on the classic code benchmarks — the right lens for the laptop models it tracks.
 
 ## Add your local benchmark
 
@@ -47,7 +55,7 @@ We're running the current **8B-class batch** of HumanEval+ self-evals locally (p
 | --- | --- | --- |
 | ✔ Done | OpenCoder-1.5B-Instruct | 58.5 |
 | ✔ Done | Qwen2.5-Coder-1.5B-Instruct | 59.8 |
-| 🟢 Running | Qwen3-8B | — |
+| ✔ Done | Qwen3-8B | 81.1 |
 | ⏳ Queued | Cogito-v1-preview-llama-8B | — |
 | ⏳ Queued | Granite-3.3-8B-Instruct | — |
 | ⏳ Queued | Ministral-8B-Instruct-2410 | — |
