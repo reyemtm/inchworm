@@ -354,6 +354,70 @@
       "note": "Our local HumanEval+ run (Qwen/Qwen3-1.7B, plain chatml prompt, greedy, MPS, official EvalPlus evaluator) scored 55.5% HumanEval+ / 61.0% HumanEval, versus the SOTA2 third-party claim of 73.6% HumanEval+ / 57.2% MBPP+. The SOTA2 variant/config is unpublished and not independently verified; treat its numbers as directional. Qwen3 cards report LiveCodeBench, not HumanEval.",
       "url": "https://www.sota2.com/research/sota/code-generation-on-humaneval-plus-and-mbpp-plus",
       "local": 55.5
+    },
+    {
+      "name": "Artigenz-Coder-DS-6.7B",
+      "org": "Artigenz",
+      "released": "2024-04",
+      "params": 6.7,
+      "plus": 72.6,
+      "base": 75.6,
+      "bcb": 38.0,
+      "bcb_hard": 12.2,
+      "bcb_mode": "instruct",
+      "fit": "mid",
+      "memory": "~5 GB @ 4-bit",
+      "best": "A DeepSeek-Coder 6.7B fine-tune that out-scores most 7B coders on HumanEval+.",
+      "note": "DeepSeek-Coder-6.7B instruction fine-tune from EvalPlus+BigCodeBench feeds (HE+ 72.6, BCB 38.0). Strong single-turn results; smaller community footprint than the majors.",
+      "url": "https://huggingface.co/Artigenz/Artigenz-Coder-DS-6.7B"
+    },
+    {
+      "name": "OpenCodeInterpreter-DS-6.7B",
+      "org": "M-A-P",
+      "released": "2024-02",
+      "params": 6.7,
+      "plus": 72.0,
+      "base": 77.4,
+      "bcb": 37.1,
+      "bcb_hard": 13.5,
+      "bcb_mode": "instruct",
+      "fit": "mid",
+      "memory": "~5 GB @ 4-bit",
+      "best": "An execution-and-iteration coder: near-top HumanEval+ with a tool-calling design.",
+      "note": "OpenCodeInterpreter (DS-6.7B) from the M-A-P team — code execution + iterative refinement lineage. Feed-sourced HE+ 72.0 / BCB 37.1.",
+      "url": "https://huggingface.co/m-a-p/OpenCodeInterpreter-DS-6.7B"
+    },
+    {
+      "name": "WaveCoder-Ultra-6.7B",
+      "org": "Microsoft",
+      "released": "2023-12",
+      "params": 6.7,
+      "plus": 69.5,
+      "base": 75.0,
+      "bcb": 33.9,
+      "bcb_hard": 12.8,
+      "bcb_mode": "instruct",
+      "fit": "mid",
+      "memory": "~5 GB @ 4-bit",
+      "best": "An early Microsoft code-tune that still posts competitive numbers.",
+      "note": "WaveCoder-Ultra 6.7B (DeepSeek-Coder base) from Microsoft Research Asia. Feed-sourced HE+ 69.5 / BCB 33.9.",
+      "url": "https://huggingface.co/microsoft/wavecoder-ultra-6.7b"
+    },
+    {
+      "name": "CodeGeeX4-All-9B",
+      "org": "THUDM",
+      "released": "2024-07",
+      "params": 9,
+      "plus": null,
+      "base": null,
+      "bcb": 40.0,
+      "bcb_hard": 18.9,
+      "bcb_mode": "instruct",
+      "fit": "mid",
+      "memory": "~6 GB @ 4-bit",
+      "best": "The strongest 9B on BigCodeBench among non-Qwen coders.",
+      "note": "CodeGeeX4-All-9B (THUDM/Zhipu): fills the BigCodeBench column at 40.0 (Hard 18.9) from the feed; no EvalPlus HumanEval+ run exists, so that cell shows —.",
+      "url": "https://huggingface.co/zai-org/codegeex4-all-9b"
     }
   ],
   "pending": [
@@ -366,12 +430,6 @@
     {
       "name": "Ling-3.0-Tiny",
       "org": "Inclusion candidate",
-      "params": "≤14B",
-      "fit": "mid"
-    },
-    {
-      "name": "Gemma 4 small variants",
-      "org": "Google",
       "params": "≤14B",
       "fit": "mid"
     },
@@ -400,7 +458,9 @@
       "fit": "mid",
       "released": "2026-02",
       "type": "general (multimodal/thinking)",
-      "ollama": "qwen3.5:9b"
+      "ollama": "qwen3.5:9b",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 65.6
     },
     {
       "name": "Qwen3.5-4B",
@@ -409,7 +469,9 @@
       "fit": "easy",
       "released": "2026-02",
       "type": "general (multimodal/thinking)",
-      "ollama": "qwen3.5:4b"
+      "ollama": "qwen3.5:4b",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 55.8
     },
     {
       "name": "Gemma-3-12B",
@@ -436,7 +498,9 @@
       "fit": "heavy",
       "released": "2026-05",
       "type": "general (vision/tools/thinking)",
-      "ollama": "gemma4:12b"
+      "ollama": "gemma4:12b",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 72.0
     },
     {
       "name": "DeepSeek-R1-Distill-Qwen-14B",
@@ -446,7 +510,9 @@
       "released": "2025-01",
       "type": "reasoning distill",
       "ollama": "deepseek-r1:14b",
-      "note": "In frozen BigCodeBench feed (38.1 instruct); LiveCodeBench pass@1 53.8 per DeepSeek report"
+      "note": "In frozen BigCodeBench feed (38.1 instruct); LiveCodeBench pass@1 53.8 per DeepSeek report",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 53.8
     },
     {
       "name": "DeepSeek-R1-Distill-Llama-8B",
@@ -466,7 +532,9 @@
       "released": "2025-04",
       "type": "reasoning (code/math strong)",
       "ollama": "phi4-reasoning",
-      "note": "Card reports LiveCodeBench/AIME; HumanEvalPlus 83.5 on phi-4-plus variant"
+      "note": "Card reports LiveCodeBench/AIME; HumanEvalPlus 83.5 on phi-4-plus variant",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 53.8
     },
     {
       "name": "Phi-4-mini-reasoning",
@@ -558,6 +626,64 @@
       "released": "2025-01",
       "type": "reasoning distill",
       "ollama": "openthinker:7b"
+    },
+    {
+      "name": "DeepSeek-R1-0528-Qwen3-8B",
+      "org": "DeepSeek",
+      "released": "2025-05",
+      "params": 8,
+      "fit": "mid",
+      "type": "reasoning distill",
+      "note": "DeepSeek distilled R1-0528 reasoning into Qwen3-8B: card reports AIME24 86.0 / AIME25 76.3 / LiveCodeBench 60.5 — SOTA for open ≤8B at release. No HumanEval+/BigCodeBench comparable run yet.",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 60.5
+    },
+    {
+      "name": "DeepCoder-1.5B-Preview",
+      "org": "Agentica",
+      "released": "2025-04",
+      "params": 1.5,
+      "fit": "easy",
+      "type": "reasoning coder",
+      "note": "1.5B sibling of the benchmarked 14B. Card self-reports HumanEval+ 73.0 and LiveCodeBench v5 25.1 — self-reported and unverified, same class as the SOTA2 Qwen3-1.7B claim our run refuted; needs a local run.",
+      "url": "https://huggingface.co/agentica-org/DeepCoder-1.5B-Preview",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 25.1
+    },
+    {
+      "name": "Olmo-3.1-7B-RL-Zero-Code",
+      "org": "Ai2",
+      "released": "2025-12",
+      "params": 7,
+      "fit": "mid",
+      "type": "fully-open RL coding",
+      "note": "Ai2 RL-Zero code model (Dolci-RL-Zero-Code dataset, fully open). No pass@1 numbers published on the card yet — only appears in our newest-model sweep.",
+      "url": "https://huggingface.co/allenai/Olmo-3.1-7B-RL-Zero-Code"
+    },
+    {
+      "name": "DeepSeek-R1-Distill-Qwen-1.5B",
+      "org": "DeepSeek",
+      "released": "2025-01",
+      "params": 1.5,
+      "fit": "easy",
+      "type": "reasoning distill",
+      "note": "Official R1 reasoning distill at 1.5B. Card reports AIME24 28.9 / LiveCodeBench 16.9 / Codeforces 954 — modest but the smallest usable R1 family member.",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 16.9
+    },
+    {
+      "name": "DeepSeek-R1-Distill-Qwen-7B",
+      "org": "DeepSeek",
+      "released": "2025-01",
+      "params": 7,
+      "fit": "mid",
+      "type": "reasoning distill",
+      "note": "Official R1 reasoning distill at 7B. Card reports AIME24 55.5 / LiveCodeBench 37.6 / Codeforces 1189. On our run queue alongside the other 8B-class candidates.",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 37.6
     }
   ],
   "candidates_no_benchmarks": {

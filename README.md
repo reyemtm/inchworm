@@ -18,7 +18,7 @@ A laptop-level leaderboard for open coding models at **≤14B parameters**.
 
 ## Sources & methodology
 
-The model catalog is checked separately from benchmark freshness. HumanEval+ is a historical snapshot, and BigCodeBench results are frozen around April 2025; newer models may appear in the **Pending Eval** tab with blank scores until a comparable result is available. The HF Open SLM leaderboard can help discover candidates, but its scores are not copied into the coding table because its tasks, harness, prompts, and evaluation conditions are different. Community submissions should use the official EvalPlus evaluator and include enough runtime, hardware, precision, model revision, and prompt details to be useful.
+The model catalog is checked separately from benchmark freshness. HumanEval+ is a historical snapshot, and BigCodeBench results are frozen around April 2025; newer models may appear in the **Pending Eval** tab, where card-reported LiveCodeBench pass@1 is shown as a directional reference and comparable-harness scores stay blank until a result is available. The HF Open SLM leaderboard can help discover candidates, but its scores are not copied into the coding table because its tasks, harness, prompts, and evaluation conditions are different. Community submissions should use the official EvalPlus evaluator and include enough runtime, hardware, precision, model revision, and prompt details to be useful.
 
 The roster lives in `models.json`; the page's data layer is regenerated from it with `python3 scripts/build_page.py`, so the shipped `index.html` stays a single self-contained file.
 
