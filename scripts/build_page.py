@@ -56,7 +56,9 @@ WATCHLIST_ROW_RE = re.compile(
     r"<td><span class=\"model-name\">(.*?)</span>"
     r"<span class=\"model-org\">(.*?)</span></td>"
     r"<td class=\"mono\">(.*?)</td>"
-    r".*?<span class=\"fit (\w+)\">Awaiting eval</span></td></tr>", re.DOTALL)
+    r"<td class=\"mono\">(.*?)</td>"
+    r"<td>.*?</td>"
+    r"<td><span class=\"fit (\\w+)\">.*?</span></td></tr>", re.DOTALL)
 
 _FIELD_VALUE = re.compile(r"(?:^|[,{]\s*)(\w+):(?:'((?:[^'\\]|\\.)*)'|([\d.]+)|null)")
 
@@ -119,12 +121,19 @@ def row_to_js(row):
 
 
 def pending_to_js(row):
-    """Serialize one pending-eval model (params may be a display string)."""
+    """Serialize one pending-eval model (params may be a display string).
+
+    Optional flat fields: pub_bench/pub_score hold a card-reported
+    benchmark (e.g. LiveCodeBench) the row publishes for reference.
+    """
     parts = [f"name:{js_str(row.get('name'))}",
              f"org:{js_str(row.get('org'))}",
              f"released:{js_str(row.get('released'))}",
              f"params:{js_params(row.get('params'))}",
              f"fit:{js_str(row.get('fit'))}"]
+    if row.get("pub_score") is not None:
+        parts.append(f"pub_bench:{js_str(row.get('pub_bench'))}")
+        parts.append(f"pub_score:{js_num(row.get('pub_score'))}")
     return "{ " + ", ".join(parts) + " }"
 
 
@@ -275,9 +284,11 @@ def adopt(html_path=DEFAULT_HTML, json_path=DEFAULT_JSON, dry_run=False):
         wm = WATCHLIST_TBODY_RE.search(html)
         if wm:
             for rm in WATCHLIST_ROW_RE.finditer(wm.group(1)):
-                name, org, params, fit = rm.groups()
+                name, org, params, released, fit = rm.groups()
                 params = None if params in ("—", "–", "") else params
+                released = None if released in ("—", "–", "") else released
                 data["pending"].append({"name": name, "org": org,
+                                        "released": released,
                                         "params": params, "fit": fit})
 
     data["benchmarked"] = [r for r in data["benchmarked"] if r.get("name")]

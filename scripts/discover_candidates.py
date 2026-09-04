@@ -58,7 +58,7 @@ def main():
     found = []
     for dataset_id in ids:
         try:
-            rows = get_json(LEADERBOARD_URL.format(urllib.parse.quote(dataset_id, safe="")))
+            rows = get_json(LEADERBOARD_URL.format(urllib.parse.quote(dataset_id, safe="/")))
         except Exception as exc:  # one broken board should not stop discovery
             print(f"[skip] {dataset_id}: {exc}")
             continue
