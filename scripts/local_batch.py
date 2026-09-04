@@ -46,14 +46,24 @@ def read_result(hf_id, slug):
     tasks = (data.get("eval") or {}).values()
     if not tasks:
         return None
-    from collections import Counter
 
-    def pct(key):
-        c = Counter(r.get(key) for t in tasks for r in t)
-        total = sum(c.values())
-        return 100.0 * c.get("pass", 0) / total if total else 0.0
+    def pct(key, both=None):
+        # Task-level pass@1 matching evalplus 0.3.1: a task's sample counts
+        # only when its status is PASS (and, for the + set, when base and
+        # plus BOTH pass — counting plus_status alone over-reports, e.g.
+        # 56.7 vs the official 55.5 on the qwen3-1.7b run). Greedy decoding
+        # yields one sample per task, so pass@1 is the fraction of passing
+        # tasks.
+        vals = []
+        for t in tasks:
+            n = len(t) or 1
+            ok = sum(1 for r in t
+                     if r.get(key) == "pass"
+                     and (both is None or r.get(both) == "pass"))
+            vals.append(ok / n)
+        return 100.0 * sum(vals) / len(vals) if vals else 0.0
 
-    return pct("plus_status"), pct("base_status")
+    return pct("plus_status", both="base_status"), pct("base_status")
 
 
 def samples_complete(slug):

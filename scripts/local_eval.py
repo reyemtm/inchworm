@@ -291,13 +291,26 @@ def cmd_result(args):
             if isinstance(v, (int, float)):
                 print(f"    {k}: {v}")
         return 0
-    from collections import Counter
-    def _pct(key):
-        c = Counter(r.get(key) for t in tasks for r in t)
-        ok = c.get("pass", 0); total = sum(c.values())
-        return (100.0 * ok / total) if total else 0.0
+    def _pct(key, both=None):
+        """Task-level pass@1 matching evalplus 0.3.1's metric.
+
+        evalplus counts a sample correct only when the status is PASS (and,
+        for the + set, when base and plus BOTH pass); the naive count of
+        plus_status alone over-reports (e.g. 56.7 vs the official 55.5 for
+        the qwen3-1.7b run, where 2 tasks passed plus but failed base).
+        With greedy decoding there is one sample per task, so pass@1 is the
+        fraction of tasks whose (all) samples pass.
+        """
+        vals = []
+        for t in tasks:
+            n = len(t) or 1
+            ok = sum(1 for r in t
+                     if r.get(key) == "pass"
+                     and (both is None or r.get(both) == "pass"))
+            vals.append(ok / n)
+        return 100.0 * sum(vals) / len(vals) if vals else 0.0
     base = _pct("base_status")
-    plus = _pct("plus_status")
+    plus = _pct("plus_status", both="base_status")
     t = dict(plus=None, base=None, bcb=None)
     if os.path.isfile(META):
         t.update(json.load(open(META)).get("targets", {}))
