@@ -134,6 +134,8 @@ def pending_to_js(row):
     if row.get("pub_score") is not None:
         parts.append(f"pub_bench:{js_str(row.get('pub_bench'))}")
         parts.append(f"pub_score:{js_num(row.get('pub_score'))}")
+    parts.append(f"note:{js_str(row.get('note'))}")
+    parts.append(f"url:{js_str(row.get('url'))}")
     return "{ " + ", ".join(parts) + " }"
 
 

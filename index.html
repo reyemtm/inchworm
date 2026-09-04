@@ -198,7 +198,7 @@
       <div class="tabbar" role="tablist" aria-label="Model views"><button class="tab active" id="coding-tab" role="tab" aria-selected="true" aria-controls="coding-panel" type="button">Benchmarked</button><button class="tab" id="watchlist-tab" role="tab" aria-selected="false" aria-controls="watchlist-panel" type="button">Pending Eval</button></div>
 
       <div id="coding-panel" class="tab-panel" role="tabpanel" aria-labelledby="coding-tab"><div class="workspace"><div class="panel leaderboard"><div class="controls"><input id="search" class="input search" type="search" placeholder="Search models…" aria-label="Search models" /><select id="fit-filter" class="select" aria-label="Filter by laptop fit"><option value="all">Any laptop fit</option><option value="easy">Easy fit</option><option value="mid">Comfortable fit</option><option value="heavy">Needs more RAM</option><option value="max">Max spec · 24GB+ RAM</option></select><div class="segmented" role="group" aria-label="Score view"><button class="segment active" data-score="plus" type="button">HumanEval+</button><button class="segment" data-score="delta" type="button">Delta</button></div></div><div class="table-wrap">    <table><thead><tr><th>#</th><th data-sort="name">Model<span class="sortmark"></span></th><th data-sort="params">Params<span class="sortmark"></span></th><th data-sort="plus">HumanEval+<span class="sortmark"></span></th><th data-sort="bcb" title="BigCodeBench Full set · pass@1, instruct lens (complete for base models)">BigCodeBench<span class="sortmark"></span></th><th data-sort="local" title="Self-evaluated HumanEval+ pass@1 from our own local runs">Local eval<span class="sortmark"></span></th><th data-sort="fit">Local fit<span class="sortmark"></span></th></tr></thead><tbody id="leaderboard-body"></tbody></table></div><div id="empty-state" class="empty" hidden>No models match these filters.</div></div><aside class="panel detail" id="detail" aria-live="polite"></aside></div></div>
-      <div id="watchlist-panel" class="tab-panel panel" role="tabpanel" aria-labelledby="watchlist-tab" hidden><div class="watch-note">Newer ≤14B models are listed here before we run them locally. Where a model card publishes <strong>LiveCodeBench pass@1</strong> we show it as a directional reference (versions/windows differ per card); comparable-harness scores (HumanEval+, BigCodeBench) stay blank until an INCHWORM local evaluation is completed. <a href="https://evalplus.github.io/" target="_blank" rel="noreferrer">Run HumanEval+ ↗</a> · <a href="https://github.com/reyemtm/inchworm/blob/main/user_benchmarks.json" target="_blank" rel="noreferrer">Submit a result ↗</a></div><div class="table-wrap"><table><thead><tr><th>#</th><th data-psort="name">Model<span class="sortmark"></span></th><th data-psort="params">Params<span class="sortmark"></span></th><th data-psort="released">Released<span class="sortmark"></span></th><th data-psort="pub" title="Card-reported LiveCodeBench pass@1 — versions/windows differ per model">LiveCodeBench<span class="sortmark"></span></th><th data-psort="fit">Local fit<span class="sortmark"></span></th></tr></thead><tbody id="pending-body"></tbody></table></div></div>
+      <div id="watchlist-panel" class="tab-panel" role="tabpanel" aria-labelledby="watchlist-tab" hidden><div class="workspace"><div class="panel leaderboard"><div class="watch-note">Newer ≤14B models are listed here before we run them locally. Where a model card publishes <strong>LiveCodeBench pass@1</strong> we show it as a directional reference (versions/windows differ per card); comparable-harness scores (HumanEval+, BigCodeBench) stay blank until an INCHWORM local evaluation is completed. <a href="https://evalplus.github.io/" target="_blank" rel="noreferrer">Run HumanEval+ ↗</a> · <a href="https://github.com/reyemtm/inchworm/blob/main/user_benchmarks.json" target="_blank" rel="noreferrer">Submit a result ↗</a></div><div class="table-wrap"><table><thead><tr><th>#</th><th data-psort="name">Model<span class="sortmark"></span></th><th data-psort="params">Params<span class="sortmark"></span></th><th data-psort="released">Released<span class="sortmark"></span></th><th data-psort="pub" title="Card-reported LiveCodeBench pass@1 — versions/windows differ per model">LiveCodeBench<span class="sortmark"></span></th><th data-psort="fit">Local fit<span class="sortmark"></span></th></tr></thead><tbody id="pending-body"></tbody></table></div></div><aside class="panel detail" id="detail-pending" aria-live="polite"></aside></div></div>
       </div></section>
 
   </main>
@@ -237,35 +237,35 @@
       { name:'CodeGeeX4-All-9B', org:'THUDM', released:'2024-07', params:9, plus:null, base:null, bcb:40.0, bcb_hard:18.9, bcb_mode:'instruct', fit:'mid', memory:'~6 GB @ 4-bit', best:'The strongest 9B on BigCodeBench among non-Qwen coders.', note:'CodeGeeX4-All-9B (THUDM/Zhipu): fills the BigCodeBench column at 40.0 (Hard 18.9) from the feed; no EvalPlus HumanEval+ run exists, so that cell shows —.', url:'https://huggingface.co/zai-org/codegeex4-all-9b' },
     ];
     const pending = [
-      { name:'LFM2.5', org:'Liquid AI', released:null, params:null, fit:'easy' },
-      { name:'Ling-3.0-Tiny', org:'Inclusion candidate', released:null, params:'≤14B', fit:'mid' },
-      { name:'Qwen3-14B', org:'Qwen', released:'2025-04', params:14, fit:'max' },
-      { name:'Qwen3-4B', org:'Qwen', released:'2025-04', params:4, fit:'easy' },
-      { name:'Qwen3.5-9B', org:'Qwen', released:'2026-02', params:9, fit:'mid', pub_bench:'LiveCodeBench', pub_score:65.6 },
-      { name:'Qwen3.5-4B', org:'Qwen', released:'2026-02', params:4, fit:'easy', pub_bench:'LiveCodeBench', pub_score:55.8 },
-      { name:'Gemma-3-12B', org:'Google', released:'2025-03', params:12, fit:'heavy' },
-      { name:'Gemma-3-4B', org:'Google', released:'2025-03', params:4, fit:'easy' },
-      { name:'Gemma-4-12B', org:'Google', released:'2026-05', params:12, fit:'heavy', pub_bench:'LiveCodeBench', pub_score:72.0 },
-      { name:'DeepSeek-R1-Distill-Qwen-14B', org:'DeepSeek', released:'2025-01', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8 },
-      { name:'DeepSeek-R1-Distill-Llama-8B', org:'DeepSeek', released:'2025-01', params:8, fit:'mid' },
-      { name:'Phi-4-reasoning', org:'Microsoft', released:'2025-04', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8 },
-      { name:'Phi-4-mini-reasoning', org:'Microsoft', released:'2025-04', params:3.8, fit:'easy' },
-      { name:'Granite-4.2-8B', org:'IBM', released:'2026', params:8, fit:'mid' },
-      { name:'Granite-4.2-3B', org:'IBM', released:'2026', params:3, fit:'easy' },
-      { name:'Ministral-3-14B', org:'Mistral', released:'2026', params:14, fit:'max' },
-      { name:'Ministral-3-8B', org:'Mistral', released:'2026', params:8, fit:'mid' },
-      { name:'Ministral-3-3B', org:'Mistral', released:'2026', params:3, fit:'easy' },
-      { name:'Cogito-14B', org:'Deep Cogito', released:'2025', params:14, fit:'max' },
-      { name:'Cogito-8B', org:'Deep Cogito', released:'2025', params:8, fit:'mid' },
-      { name:'OLMo-3-7B', org:'Ai2', released:'2026', params:7, fit:'mid' },
-      { name:'OpenThinker-7B', org:'Open Thoughts', released:'2025-01', params:7, fit:'mid' },
-      { name:'DeepSeek-R1-0528-Qwen3-8B', org:'DeepSeek', released:'2025-05', params:8, fit:'mid', pub_bench:'LiveCodeBench', pub_score:60.5 },
-      { name:'DeepCoder-1.5B-Preview', org:'Agentica', released:'2025-04', params:1.5, fit:'easy', pub_bench:'LiveCodeBench', pub_score:25.1 },
-      { name:'Olmo-3.1-7B-RL-Zero-Code', org:'Ai2', released:'2025-12', params:7, fit:'mid' },
-      { name:'DeepSeek-R1-Distill-Qwen-1.5B', org:'DeepSeek', released:'2025-01', params:1.5, fit:'easy', pub_bench:'LiveCodeBench', pub_score:16.9 },
-      { name:'DeepSeek-R1-Distill-Qwen-7B', org:'DeepSeek', released:'2025-01', params:7, fit:'mid', pub_bench:'LiveCodeBench', pub_score:37.6 },
+      { name:'LFM2.5', org:'Liquid AI', released:null, params:null, fit:'easy', note:null, url:'https://huggingface.co/LiquidAI/LFM2.5-8B-A1B' },
+      { name:'Ling-3.0-Tiny', org:'Inclusion candidate', released:null, params:'≤14B', fit:'mid', note:null, url:null },
+      { name:'Qwen3-14B', org:'Qwen', released:'2025-04', params:14, fit:'max', note:null, url:'https://huggingface.co/Qwen/Qwen3-14B' },
+      { name:'Qwen3-4B', org:'Qwen', released:'2025-04', params:4, fit:'easy', note:null, url:'https://huggingface.co/Qwen/Qwen3-4B' },
+      { name:'Qwen3.5-9B', org:'Qwen', released:'2026-02', params:9, fit:'mid', pub_bench:'LiveCodeBench', pub_score:65.6, note:null, url:'https://huggingface.co/Qwen/Qwen3.5-9B' },
+      { name:'Qwen3.5-4B', org:'Qwen', released:'2026-02', params:4, fit:'easy', pub_bench:'LiveCodeBench', pub_score:55.8, note:null, url:'https://huggingface.co/Qwen/Qwen3.5-4B' },
+      { name:'Gemma-3-12B', org:'Google', released:'2025-03', params:12, fit:'heavy', note:null, url:'https://huggingface.co/google/gemma-3-12b-it' },
+      { name:'Gemma-3-4B', org:'Google', released:'2025-03', params:4, fit:'easy', note:null, url:'https://huggingface.co/google/gemma-3-4b-it' },
+      { name:'Gemma-4-12B', org:'Google', released:'2026-05', params:12, fit:'heavy', pub_bench:'LiveCodeBench', pub_score:72.0, note:null, url:'https://huggingface.co/google/gemma-4-12B' },
+      { name:'DeepSeek-R1-Distill-Qwen-14B', org:'DeepSeek', released:'2025-01', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8, note:'In frozen BigCodeBench feed (38.1 instruct); LiveCodeBench pass@1 53.8 per DeepSeek report', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B' },
+      { name:'DeepSeek-R1-Distill-Llama-8B', org:'DeepSeek', released:'2025-01', params:8, fit:'mid', note:'In frozen BigCodeBench feed (10.6 instruct)', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B' },
+      { name:'Phi-4-reasoning', org:'Microsoft', released:'2025-04', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8, note:'Card reports LiveCodeBench/AIME; HumanEvalPlus 83.5 on phi-4-plus variant', url:'https://huggingface.co/microsoft/phi-4-reasoning' },
+      { name:'Phi-4-mini-reasoning', org:'Microsoft', released:'2025-04', params:3.8, fit:'easy', note:null, url:'https://huggingface.co/microsoft/Phi-4-mini-reasoning' },
+      { name:'Granite-4.2-8B', org:'IBM', released:'2026', params:8, fit:'mid', note:'Card reports LiveCodeBench v6 + AIME25; no HumanEval', url:'https://huggingface.co/ibm-granite/granite-4.2-8b' },
+      { name:'Granite-4.2-3B', org:'IBM', released:'2026', params:3, fit:'easy', note:null, url:'https://huggingface.co/ibm-granite/granite-4.2-3b' },
+      { name:'Ministral-3-14B', org:'Mistral', released:'2026', params:14, fit:'max', note:null, url:'https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512' },
+      { name:'Ministral-3-8B', org:'Mistral', released:'2026', params:8, fit:'mid', note:null, url:'https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512' },
+      { name:'Ministral-3-3B', org:'Mistral', released:'2026', params:3, fit:'easy', note:null, url:'https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512' },
+      { name:'Cogito-14B', org:'Deep Cogito', released:'2025', params:14, fit:'max', note:null, url:'https://huggingface.co/deepcogito/cogito-v1-preview-qwen-14B' },
+      { name:'Cogito-8B', org:'Deep Cogito', released:'2025', params:8, fit:'mid', note:null, url:'https://huggingface.co/deepcogito/cogito-v1-preview-llama-8B' },
+      { name:'OLMo-3-7B', org:'Ai2', released:'2026', params:7, fit:'mid', note:null, url:'https://huggingface.co/allenai/Olmo-3-7B-Instruct' },
+      { name:'OpenThinker-7B', org:'Open Thoughts', released:'2025-01', params:7, fit:'mid', note:null, url:'https://huggingface.co/open-thoughts/OpenThinker-7B' },
+      { name:'DeepSeek-R1-0528-Qwen3-8B', org:'DeepSeek', released:'2025-05', params:8, fit:'mid', pub_bench:'LiveCodeBench', pub_score:60.5, note:'DeepSeek distilled R1-0528 reasoning into Qwen3-8B: card reports AIME24 86.0 / AIME25 76.3 / LiveCodeBench 60.5 — SOTA for open ≤8B at release. No HumanEval+/BigCodeBench comparable run yet.', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-0528-Qwen3-8B' },
+      { name:'DeepCoder-1.5B-Preview', org:'Agentica', released:'2025-04', params:1.5, fit:'easy', pub_bench:'LiveCodeBench', pub_score:25.1, note:'1.5B sibling of the benchmarked 14B. Card self-reports HumanEval+ 73.0 and LiveCodeBench v5 25.1 — self-reported and unverified, same class as the SOTA2 Qwen3-1.7B claim our run refuted; needs a local run.', url:'https://huggingface.co/agentica-org/DeepCoder-1.5B-Preview' },
+      { name:'Olmo-3.1-7B-RL-Zero-Code', org:'Ai2', released:'2025-12', params:7, fit:'mid', note:'Ai2 RL-Zero code model (Dolci-RL-Zero-Code dataset, fully open). No pass@1 numbers published on the card yet — only appears in our newest-model sweep.', url:'https://huggingface.co/allenai/Olmo-3.1-7B-RL-Zero-Code' },
+      { name:'DeepSeek-R1-Distill-Qwen-1.5B', org:'DeepSeek', released:'2025-01', params:1.5, fit:'easy', pub_bench:'LiveCodeBench', pub_score:16.9, note:'Official R1 reasoning distill at 1.5B. Card reports AIME24 28.9 / LiveCodeBench 16.9 / Codeforces 954 — modest but the smallest usable R1 family member.', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B' },
+      { name:'DeepSeek-R1-Distill-Qwen-7B', org:'DeepSeek', released:'2025-01', params:7, fit:'mid', pub_bench:'LiveCodeBench', pub_score:37.6, note:'Official R1 reasoning distill at 7B. Card reports AIME24 55.5 / LiveCodeBench 37.6 / Codeforces 1189. On our run queue alongside the other 8B-class candidates.', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B' },
     ];
-    const state = { query:'', fit:'all', score:'plus', selected:0, sort:'plus', direction:'desc', psort:null, pdir:'desc' };
+    const state = { query:'', fit:'all', score:'plus', selected:0, sort:'plus', direction:'desc', psort:'released', pdir:'desc', selectedPending:0 };
     // Shared fit-tier rank for sorting the Local fit columns of both tables.
     const FITRANK = { easy:1, mid:2, heavy:3, max:4 };
     // Pending Eval table sort — its own namespace (data-psort) so it never
@@ -317,11 +317,23 @@
       if (!tb) return;
       const rows = pSorted();
       tb.innerHTML = rows.map((m, i) => {
+        const actual = pending.indexOf(m);
         const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—');
         const rel = m.released ? fmtRel(m.released) : '—';
         const pub = (m.pub_score != null) ? `<span class="score">${m.pub_score.toFixed(1)}%</span><span class="subscore">card · ${m.pub_bench || 'LiveCodeBench'}</span>` : '<span class="score">—</span>';
-        return `<tr><td class="rank">${String(i + 1).padStart(2, '0')}</td><td><span class="model-name">${m.name}</span><span class="model-org">${m.org}</span></td><td class="mono">${params}</td><td class="mono">${rel}</td><td>${pub}</td><td><span class="fit ${m.fit}">${labels[m.fit]}</span></td></tr>`;
+        return `<tr class="${actual===state.selectedPending?'selected':''}" data-pindex="${actual}"><td class="rank">${String(i + 1).padStart(2, '0')}</td><td><span class="model-name">${m.name}</span><span class="model-org">${m.org}</span></td><td class="mono">${params}</td><td class="mono">${rel}</td><td>${pub}</td><td><span class="fit ${m.fit}">${labels[m.fit]}</span></td></tr>`;
       }).join('');
+      tb.querySelectorAll('tr[data-pindex]').forEach(row => row.addEventListener('click', () => { state.selectedPending=Number(row.dataset.pindex); renderPending(); }));
+      renderPendingDetail();
+    }
+    function renderPendingDetail() {
+      const pd = document.querySelector('#detail-pending');
+      const m = pending[state.selectedPending];
+      if (!pd || !m) return;
+      const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—');
+      const rel = m.released ? fmtRel(m.released) : '—';
+      const pub = (m.pub_score != null) ? `<span class="score">${m.pub_score.toFixed(1)}%</span><span class="subscore">card · ${m.pub_bench || 'LiveCodeBench'}</span>` : '<span class="score">—</span>';
+      pd.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params}${m.released ? ' · released ' + fmtRel(m.released) : ''}</div><div class="detail-fit"><strong>${labels[m.fit]}</strong><span>${m.fit==='max' ? 'Max spec tier — assumes 24GB+ unified memory or VRAM.' : 'Typical fit for running this model locally.'}</span></div><div class="detail-grid"><div class="detail-metric"><small>Params</small><strong>${params}</strong></div><div class="detail-metric"><small>Released</small><strong>${rel}</strong></div><div class="detail-metric"><small>${m.pub_bench || 'Published'}</small>${pub}</div><div class="detail-metric"><small>Local fit</small><strong>${labels[m.fit]}</strong></div></div>${m.note ? `<p>${m.note}</p>` : ''}${m.url ? `<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a>` : ''}</div>`;
     }
     document.querySelectorAll('[data-sort]').forEach(th => th.addEventListener('click', () => applySort(th.dataset.sort)));
     document.querySelectorAll('[data-psort]').forEach(th => th.addEventListener('click', () => applyPSort(th.dataset.psort)));
@@ -340,6 +352,7 @@
     themeToggle.addEventListener('click', () => setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
     setTheme(localStorage.getItem('patchwork-theme') || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
     markSort();
+    markPSort();
     render();
     renderPending();
   </script>
