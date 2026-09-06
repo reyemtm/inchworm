@@ -376,7 +376,8 @@
     }
 
     th[data-sort],
-    th[data-psort] {
+    th[data-psort],
+    th[data-tsort] {
       cursor: pointer;
       user-select: none;
     }
@@ -389,7 +390,8 @@
     }
 
     th[data-sort]:hover,
-    th[data-psort]:hover {
+    th[data-psort]:hover,
+    th[data-tsort]:hover {
       color: var(--ink);
     }
 
@@ -817,9 +819,9 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Model</th>
-                    <th>Params</th>
-                    <th>TinyMark</th>
+                    <th data-tsort="name">Model<span class="sortmark"></span></th>
+                    <th data-tsort="params">Params<span class="sortmark"></span></th>
+                    <th data-tsort="tinymark">TinyMark<span class="sortmark"></span></th>
                     <th>Ollama model</th>
                     <th>Harness</th>
                     <th>Local fit</th>
@@ -954,7 +956,7 @@
       { name:'DeepSeek-R1-Distill-Qwen-7B', org:'DeepSeek', released:'2025-01', params:7, fit:'mid', pub_bench:'LiveCodeBench', pub_score:37.6, note:'Official R1 reasoning distill at 7B. Card reports AIME24 55.5 / LiveCodeBench 37.6 / Codeforces 1189. On our run queue alongside the other 8B-class candidates.', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B' },
       { name:'Ornith-1.5-9B', org:'Ornith', released:'2026', params:9, fit:'mid', swe_verified:70.6, swe_pro:47.5, tinymark:83.3, tinymark_model:'ornith-1.5:9b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:'Agentic-tuned (self-improvement RL): SWE-bench Verified 70.6 / Pro 47.5 — its strengths are agentic/long-horizon, so it under-performs single-turn pass@1 benchmarks by design. No HumanEval+/LiveCodeBench.', url:'https://huggingface.co/ornith-ai/Ornith-1.5-9B' },
     ];
-    const state = { query: '', fit: 'all', score: 'plus', selected: 0, sort: 'plus', direction: 'desc', psort: 'released', pdir: 'desc', selectedPending: 0 };
+    const state = { query: '', fit: 'all', score: 'plus', selected: 0, sort: 'plus', direction: 'desc', psort: 'released', pdir: 'desc', selectedPending: 0, tsort: 'tinymark', tdir: 'desc' };
     // Shared fit-tier rank for sorting the Local fit columns of both tables.
     const FITRANK = { easy: 1, mid: 2, heavy: 3, max: 4 };
     // Pending Eval table sort — its own namespace (data-psort) so it never
@@ -969,6 +971,15 @@
     // branches always push blanks to the LAST rows, in either direction.
     function pCmp(a, b, dir) { const am = pVal(a) == null, bm = pVal(b) == null; if (am && bm) return 0; if (am) return 1; if (bm) return -1; const va = pVal(a), vb = pVal(b); const c = typeof va === 'string' || typeof vb === 'string' ? String(va).localeCompare(String(vb)) : va - vb; return c * dir; }
     function pSorted() { if (!state.psort) return pending.slice(); const dir = state.pdir === 'asc' ? 1 : -1; return pending.slice().sort((a, b) => pCmp(a, b, dir)); }
+    // TinyMark table sort — its own namespace (data-tsort) so it never collides
+    // with the bench (data-sort) or pending (data-psort) bindings. First click
+    // sorts descending, subsequent clicks toggle, like the other two tables.
+    // Missing values (non-numeric params/tinymark) sort last in either direction.
+    function applyTSort(field) { if (state.tsort === field) { state.tdir = state.tdir === 'desc' ? 'asc' : 'desc'; } else { state.tsort = field; state.tdir = 'desc'; } markTSort(); renderTinyMark(); }
+    function markTSort() { document.querySelectorAll('th[data-tsort]').forEach(th => { const span = th.querySelector('.sortmark'); if (span) span.textContent = th.dataset.tsort === state.tsort ? (state.tdir === 'desc' ? '▼' : '▲') : ''; }); }
+    function tVal(m) { switch (state.tsort) { case 'name': return (m.name || '').toLowerCase(); case 'params': return typeof m.params === 'number' ? m.params : null; case 'tinymark': return typeof m.tinymark === 'number' ? m.tinymark : null; } }
+    function tCmp(a, b, dir) { const am = tVal(a) == null, bm = tVal(b) == null; if (am && bm) return 0; if (am) return 1; if (bm) return -1; const va = tVal(a), vb = tVal(b); const c = typeof va === 'string' || typeof vb === 'string' ? String(va).localeCompare(String(vb)) : va - vb; return c * dir; }
+    function tSorted() { const all = [...models, ...pending].filter(m => m.tinymark != null); if (!state.tsort) return all; const dir = state.tdir === 'asc' ? 1 : -1; return all.sort((a, b) => tCmp(a, b, dir)); }
     function applySort(field) { if (state.sort === field) { state.direction = state.direction === 'desc' ? 'asc' : 'desc'; } else { state.sort = field; state.direction = 'desc'; } markSort(); render(); }
     function markSort() { document.querySelectorAll('th[data-sort]').forEach(th => { const span = th.querySelector('.sortmark'); if (span) span.textContent = th.dataset.sort === state.sort ? (state.direction === 'desc' ? '▼' : '▲') : ''; }); }
     const body = document.querySelector('#leaderboard-body');
@@ -1035,8 +1046,7 @@
     function renderTinyMark() {
       const tb = document.querySelector('#tinymark-body');
       if (!tb) return;
-      const all = [...models, ...pending].filter(m => m.tinymark != null);
-      all.sort((a, b) => (b.tinymark ?? 0) - (a.tinymark ?? 0));
+      const all = tSorted();
       tb.innerHTML = all.map((m, i) => {
         const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—');
         const tasks = m.tinymark_tasks != null ? `${m.tinymark_tasks} problems` : '';
@@ -1046,6 +1056,7 @@
     }
     document.querySelectorAll('[data-sort]').forEach(th => th.addEventListener('click', () => applySort(th.dataset.sort)));
     document.querySelectorAll('[data-psort]').forEach(th => th.addEventListener('click', () => applyPSort(th.dataset.psort)));
+    document.querySelectorAll('[data-tsort]').forEach(th => th.addEventListener('click', () => applyTSort(th.dataset.tsort)));
     document.querySelector('#search').addEventListener('input', e => { state.query = e.target.value; render(); });
     document.querySelector('#fit-filter').addEventListener('change', e => { state.fit = e.target.value; render(); });
 
@@ -1061,6 +1072,7 @@
     setTheme(localStorage.getItem('patchwork-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
     markSort();
     markPSort();
+    markTSort();
     render();
     renderPending();
     renderTinyMark();
