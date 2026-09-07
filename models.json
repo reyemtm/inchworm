@@ -485,11 +485,13 @@
       "type": "general (hybrid thinking)",
       "ollama": "qwen3:14b",
       "url": "https://huggingface.co/Qwen/Qwen3-14B",
-      "tinymark": 96.7,
+      "tinymark": 86.2,
       "tinymark_model": "qwen3:14b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 87.5,
+      "tinymark_py": 85.0
     },
     {
       "name": "Qwen3-4B",
@@ -500,11 +502,13 @@
       "type": "general (hybrid thinking)",
       "ollama": "qwen3:4b",
       "url": "https://huggingface.co/Qwen/Qwen3-4B",
-      "tinymark": 16.7,
+      "tinymark": 0.0,
       "tinymark_model": "qwen3:4b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 0.0,
+      "tinymark_py": 0.0
     },
     {
       "name": "Qwen3.5-9B",
@@ -516,12 +520,14 @@
       "ollama": "qwen3.5:9b",
       "pub_bench": "LiveCodeBench",
       "pub_score": 65.6,
-      "tinymark": 80.0,
+      "tinymark": 73.8,
       "tinymark_model": "qwen3.5:9b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
       "url": "https://huggingface.co/Qwen/Qwen3.5-9B",
-      "tinymark_level": "large"
+      "tinymark_level": "large",
+      "tinymark_js": 62.5,
+      "tinymark_py": 85.0
     },
     {
       "name": "Qwen3.5-4B",
@@ -534,11 +540,13 @@
       "pub_bench": "LiveCodeBench",
       "pub_score": 55.8,
       "url": "https://huggingface.co/Qwen/Qwen3.5-4B",
-      "tinymark": 80.0,
+      "tinymark": 70.0,
       "tinymark_model": "qwen3.5:4b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 65.0,
+      "tinymark_py": 75.0
     },
     {
       "name": "Gemma-3-12B",
@@ -549,11 +557,13 @@
       "type": "general (multimodal)",
       "ollama": "gemma3:12b",
       "url": "https://huggingface.co/google/gemma-3-12b-it",
-      "tinymark": 76.7,
+      "tinymark": 71.2,
       "tinymark_model": "gemma3:12b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 57.5,
+      "tinymark_py": 85.0
     },
     {
       "name": "Gemma-3-4B",
@@ -564,11 +574,13 @@
       "type": "general (multimodal)",
       "ollama": "gemma3:4b",
       "url": "https://huggingface.co/google/gemma-3-4b-it",
-      "tinymark": 76.7,
+      "tinymark": 72.5,
       "tinymark_model": "gemma3:4b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 70.0,
+      "tinymark_py": 75.0
     },
     {
       "name": "Gemma-4-12B",
@@ -580,12 +592,14 @@
       "ollama": "gemma4:12b",
       "pub_bench": "LiveCodeBench",
       "pub_score": 72.0,
-      "tinymark": 93.3,
+      "tinymark": 87.5,
       "tinymark_model": "gemma4:12b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
       "url": "https://huggingface.co/google/gemma-4-12B",
-      "tinymark_level": "large"
+      "tinymark_level": "large",
+      "tinymark_js": 82.5,
+      "tinymark_py": 92.5
     },
     {
       "name": "DeepSeek-R1-Distill-Qwen-14B",
@@ -599,11 +613,13 @@
       "pub_bench": "LiveCodeBench",
       "pub_score": 53.8,
       "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-      "tinymark": 43.3,
+      "tinymark": 0.0,
       "tinymark_model": "deepseek-r1:14b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 0.0,
+      "tinymark_py": 0.0
     },
     {
       "name": "DeepSeek-R1-Distill-Llama-8B",
@@ -615,11 +631,13 @@
       "ollama": "deepseek-r1:8b",
       "note": "In frozen BigCodeBench feed (10.6 instruct)",
       "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
-      "tinymark": 56.7,
+      "tinymark": 30.0,
       "tinymark_model": "deepseek-r1:8b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 30.0,
+      "tinymark_py": 30.0
     },
     {
       "name": "Phi-4-reasoning",
@@ -635,9 +653,11 @@
       "url": "https://huggingface.co/microsoft/phi-4-reasoning",
       "tinymark": 0.0,
       "tinymark_model": "phi4-reasoning",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 0.0,
+      "tinymark_py": 0.0
     },
     {
       "name": "Phi-4-mini-reasoning",
@@ -648,11 +668,13 @@
       "type": "reasoning",
       "ollama": "phi4-mini-reasoning",
       "url": "https://huggingface.co/microsoft/Phi-4-mini-reasoning",
-      "tinymark": 16.7,
+      "tinymark": 1.2,
       "tinymark_model": "phi4-mini-reasoning",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 0.0,
+      "tinymark_py": 2.5
     },
     {
       "name": "Granite-4.2-8B",
@@ -666,11 +688,13 @@
       "swe_pro": 19.1,
       "note": "Card reports SWE-bench Verified 47.7 / Pro 19.1 (agentic), LiveCodeBench v6 + AIME25; no HumanEval",
       "url": "https://huggingface.co/ibm-granite/granite-4.2-8b",
-      "tinymark": 90.0,
+      "tinymark": 80.0,
       "tinymark_model": "granite4.2:8b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 77.5,
+      "tinymark_py": 82.5
     },
     {
       "name": "Ministral-3-14B",
@@ -681,11 +705,13 @@
       "type": "edge deployment",
       "ollama": "ministral-3:14b",
       "url": "https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512",
-      "tinymark": 100.0,
+      "tinymark": 87.5,
       "tinymark_model": "ministral-3:14b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 87.5,
+      "tinymark_py": 87.5
     },
     {
       "name": "Ministral-3-8B",
@@ -696,11 +722,13 @@
       "type": "edge deployment",
       "ollama": "ministral-3:8b",
       "url": "https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512",
-      "tinymark": 80.0,
+      "tinymark": 81.2,
       "tinymark_model": "ministral-3:8b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 72.5,
+      "tinymark_py": 90.0
     },
     {
       "name": "Ministral-3-3B",
@@ -711,11 +739,13 @@
       "type": "edge deployment",
       "ollama": "ministral-3:3b",
       "url": "https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512",
-      "tinymark": 56.7,
+      "tinymark": 62.5,
       "tinymark_model": "ministral-3:3b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 47.5,
+      "tinymark_py": 77.5
     },
     {
       "name": "Cogito-14B",
@@ -726,11 +756,13 @@
       "type": "reasoning",
       "ollama": "cogito:14b",
       "url": "https://huggingface.co/deepcogito/cogito-v1-preview-qwen-14B",
-      "tinymark": 93.3,
+      "tinymark": 86.2,
       "tinymark_model": "cogito:14b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 87.5,
+      "tinymark_py": 85.0
     },
     {
       "name": "Cogito-8B",
@@ -741,11 +773,13 @@
       "type": "reasoning",
       "ollama": "cogito:8b",
       "url": "https://huggingface.co/deepcogito/cogito-v1-preview-llama-8B",
-      "tinymark": 66.7,
+      "tinymark": 58.8,
       "tinymark_model": "cogito:8b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 55.0,
+      "tinymark_py": 62.5
     },
     {
       "name": "OLMo-3-7B",
@@ -756,11 +790,13 @@
       "type": "fully-open research",
       "ollama": "olmo-3:7b",
       "url": "https://huggingface.co/allenai/Olmo-3-7B-Instruct",
-      "tinymark": 20.0,
+      "tinymark": 1.2,
       "tinymark_model": "olmo-3:7b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 0.0,
+      "tinymark_py": 2.5
     },
     {
       "name": "OpenThinker-7B",
@@ -771,11 +807,13 @@
       "type": "reasoning distill",
       "ollama": "openthinker:7b",
       "url": "https://huggingface.co/open-thoughts/OpenThinker-7B",
-      "tinymark": 50.0,
+      "tinymark": 8.8,
       "tinymark_model": "openthinker:7b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
-      "tinymark_level": "large"
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_js": 10.0,
+      "tinymark_py": 7.5
     },
     {
       "name": "DeepSeek-R1-0528-Qwen3-8B",
@@ -845,13 +883,15 @@
       "ollama": "ornith-1.5:9b",
       "swe_verified": 70.6,
       "swe_pro": 47.5,
-      "tinymark": 83.3,
+      "tinymark": 82.5,
       "tinymark_model": "ornith-1.5:9b",
-      "tinymark_harness": "ollama",
-      "tinymark_tasks": 30,
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
       "note": "Agentic-tuned (self-improvement RL): SWE-bench Verified 70.6 / Pro 47.5 — its strengths are agentic/long-horizon, so it under-performs single-turn pass@1 benchmarks by design. No HumanEval+/LiveCodeBench.",
       "url": "https://huggingface.co/ornith-ai/Ornith-1.5-9B",
-      "tinymark_level": "large"
+      "tinymark_level": "large",
+      "tinymark_js": 77.5,
+      "tinymark_py": 87.5
     }
   ],
   "candidates_no_benchmarks": {

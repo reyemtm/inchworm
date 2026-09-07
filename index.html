@@ -737,14 +737,15 @@
         <div class="section-heading">
           <div class="hero-meta"><span class="tag"><strong>catalog</strong> · checked 5 Sep 2026</span><span
               class="tag"><strong>scope</strong> · ≤ 14B parameters</span><span class="tag"><strong>HumanEval+
-                snapshot</strong> · historical</span><span class="tag"><strong>MBPP+ snapshot</strong> · historical</span><span class="tag"><strong>BigCodeBench snapshot</strong> · April
+                snapshot</strong> · historical</span><span class="tag"><strong>MBPP+ snapshot</strong> ·
+              historical</span><span class="tag"><strong>BigCodeBench snapshot</strong> · April
               2025</span></div>
         </div>
         <div class="tabbar" role="tablist" aria-label="Model views"><button class="tab active" id="coding-tab"
             role="tab" aria-selected="true" aria-controls="coding-panel" type="button">Benchmarked</button><button
             class="tab" id="watchlist-tab" role="tab" aria-selected="false" aria-controls="watchlist-panel"
-            type="button">Pending Eval</button><button class="tab" id="tinymark-tab" role="tab"
-            aria-selected="false" aria-controls="tinymark-panel" type="button">TinyMark</button></div>
+            type="button">Pending Eval</button><button class="tab" id="tinymark-tab" role="tab" aria-selected="false"
+            aria-controls="tinymark-panel" type="button">TinyMark</button></div>
 
         <div id="coding-panel" class="tab-panel" role="tabpanel" aria-labelledby="coding-tab">
           <div class="workspace">
@@ -786,7 +787,10 @@
         <div id="watchlist-panel" class="tab-panel" role="tabpanel" aria-labelledby="watchlist-tab" hidden>
           <div class="workspace">
             <div class="panel leaderboard">
-              <div class="benchmark-note">Newer ≤14B models are listed here before we run them locally. Where a model card publishes LiveCodeBench pass@1 we show it as a directional reference (versions/windows differ per card); comparable-harness scores (HumanEval+, BigCodeBench) stay blank until an INCHWORM local evaluation is completed.</div>
+              <div class="benchmark-note">Newer ≤14B models are listed here before we run them locally. Where a model
+                card publishes LiveCodeBench pass@1 we show it as a directional reference (versions/windows differ per
+                card); comparable-harness scores (HumanEval+, BigCodeBench) stay blank until an INCHWORM local
+                evaluation is completed.</div>
               <div class="table-wrap">
                 <table>
                   <thead>
@@ -798,8 +802,7 @@
                       <th data-psort="pub"
                         title="Card-reported LiveCodeBench pass@1 — versions/windows differ per model">
                         LiveCodeBench<span class="sortmark"></span></th>
-                      <th data-psort="swe"
-                        title="Card-reported SWE-bench — Verified or Pro variant noted per model">
+                      <th data-psort="swe" title="Card-reported SWE-bench — Verified or Pro variant noted per model">
                         SWE-bench<span class="sortmark"></span></th>
                       <th data-psort="fit">Local fit<span class="sortmark"></span></th>
                     </tr>
@@ -812,8 +815,11 @@
           </div>
         </div>
         <div id="tinymark-panel" class="tab-panel" role="tabpanel" aria-labelledby="tinymark-tab" hidden>
+          <div class="workspace">
           <div class="panel leaderboard">
-            <div class="benchmark-note">TinyMark is INCHWORM's own single-turn coding benchmark: one prompt, one function, one grader, no tools. Scores are pass@1 over the current 17-task set, run via the Ollama chat API on this machine (greedy).</div>
+            <div class="benchmark-note">TinyMark is a work-in-progress benchmark: one prompt, one function, no tools.
+              Scores are pass@1 over a JS/Python problem set, run with ollama on a MBP (M2 Pro · 10-core · 32GB;
+              30s timeout).</div>
             <div class="table-wrap">
               <table>
                 <thead>
@@ -830,7 +836,10 @@
                 <tbody id="tinymark-body"></tbody>
               </table>
             </div>
-            <div class="table-note">TinyMark — an open-source mini benchmark tool in development. Scores are directional single-turn pass@1 on this machine, not yet comparable to HumanEval+ or BigCodeBench.</div>
+            <div class="table-note" id="tinymark-note">TinyMark scores are directional single-turn pass@1 on this MBP
+              (M2 Pro · 10-core · 32GB), run against the same models as the other tabs.</div>
+          </div>
+          <aside class="panel detail" id="detail-tinymark" aria-live="polite"></aside>
           </div>
         </div>
       </div>
@@ -853,7 +862,8 @@
         <strong>†</strong> (and greyed) is a published score in <strong>conflict</strong> with our local run (≥5 points
         lower than our measurement) — treat it as unconfirmed and check the Local eval column. A subscore reading
         "pass@1 · verified" marks a published score our local run reproduced within 5 points; it is corroborated, not
-        proven — our run is a single greedy sample on one machine.</p>
+        proven — our run is a single greedy sample on one machine.
+      </p>
       <p class="mono">Where this data already lives online:</p>
       <ul class="source-list">
         <li><a href="https://evalplus.github.io/leaderboard.html" target="_blank" rel="noreferrer">EvalPlus leaderboard
@@ -882,7 +892,8 @@
           and why our fit tiers assume dense (not MoE) models</li>
       </ul>
       <p class="mono"> Data layer: local snapshot from the EvalPlus leaderboard data and the BigCodeBench results
-        datasets (both frozen as of Apr 2025) · MBPP+ values likewise from the EvalPlus feed · new scores from our own local runs · release dates under each model name
+        datasets (both frozen as of Apr 2025) · MBPP+ values likewise from the EvalPlus feed · new scores from our own
+        local runs · release dates under each model name
         are the month the weights appeared publicly on Hugging Face (or the official launch date), compiled per model at
         snapshot time</p>
     </div>
@@ -902,11 +913,11 @@
     const models = [
       { name:'Qwen3-8B', org:'Qwen', released:'2025-04', params:8, plus:81.1, base:85.4, fit:'mid', memory:'~5 GB @ 4-bit', local:81.1, plus_source:'self-eval', best:'The current Local eval leader — a general model that out-codes every coder-tuned 8B on HumanEval+.', note:'HumanEval+ and HumanEval entirely from our own self-evaluated run on this machine (plain chat template with thinking disabled, greedy, official EvalPlus evaluator): 81.1 / 85.4. No feed or card coverage exists, so there is no BigCodeBench value yet. A general (hybrid-thinking) model, not code-tuned — which makes the score more notable. ~10 min/sample in bf16 on MPS; allow a multi-hour run.', url:'https://huggingface.co/Qwen/Qwen3-8B' },
       { name:'Qwen2.5-Coder-14B-Instruct', org:'Qwen', released:'2024-11', params:14, plus:75.9, base:84.1, bcb:48.2, bcb_hard:23.6, bcb_mode:'instruct', fit:'max', memory:'~9-10 GB @ 4-bit', best:'The top rung for local coding — only when you have 24GB+ to spare.', note:'Highest scores on this page, from the Qwen2.5-Coder technical report (HumanEval+ 75.9, HumanEval 84.1). Smooth on 24GB+ unified-memory Macs or 24GB VRAM laptops (~45-60 tok/s at Q4); on 16GB machines it gets tight.', url:'https://huggingface.co/Qwen/Qwen2.5-Coder-14B-Instruct' },
-      { name:'Qwen2.5-Coder-7B-Instruct', org:'Qwen', released:'2024-09', params:7, plus:73.8, base:88.4, bcb:40.4, bcb_hard:20.3, bcb_mode:'instruct', fit:'mid', memory:'~5 GB @ 4-bit', tinymark:90.0, tinymark_model:'qwen2.5-coder:latest', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', best:'A balanced daily driver for Python, JS, and debugging.', note:'Strong general-purpose coding model with a large context window. The instruct variant is especially useful for iterative edits.', url:'https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct' },
+      { name:'Qwen2.5-Coder-7B-Instruct', org:'Qwen', released:'2024-09', params:7, plus:73.8, base:88.4, bcb:40.4, bcb_hard:20.3, bcb_mode:'instruct', fit:'mid', memory:'~5 GB @ 4-bit', tinymark:90.0, tinymark_js:null, tinymark_py:null, tinymark_model:'qwen2.5-coder:latest', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', best:'A balanced daily driver for Python, JS, and debugging.', note:'Strong general-purpose coding model with a large context window. The instruct variant is especially useful for iterative edits.', url:'https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct' },
       { name:'Yi-Coder-9B-Chat', org:'01.AI', released:'2024-08', params:9, plus:71.2, base:86.7, bcb:38.1, bcb_hard:11.5, bcb_mode:'instruct', fit:'mid', memory:'~6 GB @ 4-bit', best:'High scores with strong multilingual code support.', note:'One of the best sub-10B models for code. Excels at long-context tasks and supports a wide range of languages.', url:'https://huggingface.co/01-ai/Yi-Coder-9B-Chat' },
-      { name:'DeepSeek-Coder-6.7B-Instruct', org:'DeepSeek', released:'2023-10', params:6.7, plus:71.3, base:74.4, bcb:35.5, bcb_hard:10.1, bcb_mode:'instruct', mbpp_plus:65.6, fit:'mid', memory:'~5 GB @ 4-bit', tinymark:80.0, tinymark_model:'deepseek-coder:6.7b-instruct', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', best:'A proven older model with broad tooling support.', note:'Still practical in local runtimes thanks to its mature GGUF ecosystem and reasonable memory footprint.', url:'https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-instruct' },
+      { name:'DeepSeek-Coder-6.7B-Instruct', org:'DeepSeek', released:'2023-10', params:6.7, plus:71.3, base:74.4, bcb:35.5, bcb_hard:10.1, bcb_mode:'instruct', mbpp_plus:65.6, fit:'mid', memory:'~5 GB @ 4-bit', tinymark:80.0, tinymark_js:null, tinymark_py:null, tinymark_model:'deepseek-coder:6.7b-instruct', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', best:'A proven older model with broad tooling support.', note:'Still practical in local runtimes thanks to its mature GGUF ecosystem and reasonable memory footprint.', url:'https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-instruct' },
       { name:'StarCoder2-7B', org:'BigCode', released:'2024-02', params:7, plus:61.2, base:72.6, bcb:27.7, bcb_hard:8.8, bcb_mode:'complete', fit:'mid', memory:'~5 GB @ 4-bit', best:'A transparent, permissively licensed baseline.', note:'A solid open code model and useful reference point. It tends to benefit from precise prompts and a little more scaffolding.', url:'https://huggingface.co/bigcode/starcoder2-7b' },
-      { name:'Qwen2.5-Coder-3B-Instruct', org:'Qwen', released:'2024-11', params:3, plus:68.4, base:83.5, fit:'easy', memory:'~2.5 GB @ 4-bit', tinymark:73.3, tinymark_model:'qwen2.5-coder:3b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', best:'Fast local completions on compact machines.', note:'The smallest model in this set, but surprisingly capable for routine code generation, transformations, and lightweight agents.', url:'https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct' },
+      { name:'Qwen2.5-Coder-3B-Instruct', org:'Qwen', released:'2024-11', params:3, plus:68.4, base:83.5, fit:'easy', memory:'~2.5 GB @ 4-bit', tinymark:73.3, tinymark_js:null, tinymark_py:null, tinymark_model:'qwen2.5-coder:3b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', best:'Fast local completions on compact machines.', note:'The smallest model in this set, but surprisingly capable for routine code generation, transformations, and lightweight agents.', url:'https://huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct' },
       { name:'Phi-3.5-mini-instruct', org:'Microsoft', released:'2024-08', params:3.8, plus:57.4, base:73.2, bcb:32.8, bcb_hard:16.9, bcb_mode:'instruct', fit:'easy', memory:'~3 GB @ 4-bit', best:'Low-memory coding assistance and quick iteration.', note:'Compact and efficient. It is better suited to focused tasks than large multi-file refactors.', url:'https://huggingface.co/microsoft/Phi-3.5-mini-instruct' },
       { name:'CodeGemma-7B-it', org:'Google', released:'2024-04', params:7, plus:51.8, base:60.4, bcb:32.3, bcb_hard:7.4, bcb_mode:'instruct', mbpp_plus:56.9, fit:'mid', memory:'~5 GB @ 4-bit', best:'A dependable Google-weighted baseline.', note:'Good for code completion and explanation workflows. Check the license and usage terms before shipping it inside a product.', url:'https://huggingface.co/google/codegemma-7b-it' },
       { name:'CodeLlama-7b-Instruct', org:'Meta', released:'2023-08', params:7, plus:37.2, base:45.9, bcb:21.9, bcb_hard:3.4, bcb_mode:'instruct', fit:'mid', memory:'~5 GB @ 4-bit', best:'A well-known baseline, though outperformed by newer models.', note:'Pioneer code model. Still widely used but clearly surpassed by Qwen and DeepSeek in recent benchmarks.', url:'https://huggingface.co/codellama/CodeLlama-7b-Instruct-hf' },
@@ -931,33 +942,33 @@
     const pending = [
       { name:'LFM2.5', org:'Liquid AI', released:null, params:null, fit:'easy', note:null, url:'https://huggingface.co/LiquidAI/LFM2.5-8B-A1B' },
       { name:'Ling-3.0-Tiny', org:'Inclusion candidate', released:null, params:'≤14B', fit:'mid', note:null, url:null },
-      { name:'Qwen3-14B', org:'Qwen', released:'2025-04', params:14, fit:'max', tinymark:96.7, tinymark_model:'qwen3:14b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3-14B' },
-      { name:'Qwen3-4B', org:'Qwen', released:'2025-04', params:4, fit:'easy', tinymark:16.7, tinymark_model:'qwen3:4b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3-4B' },
-      { name:'Qwen3.5-9B', org:'Qwen', released:'2026-02', params:9, fit:'mid', pub_bench:'LiveCodeBench', pub_score:65.6, tinymark:80.0, tinymark_model:'qwen3.5:9b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3.5-9B' },
-      { name:'Qwen3.5-4B', org:'Qwen', released:'2026-02', params:4, fit:'easy', pub_bench:'LiveCodeBench', pub_score:55.8, tinymark:80.0, tinymark_model:'qwen3.5:4b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3.5-4B' },
-      { name:'Gemma-3-12B', org:'Google', released:'2025-03', params:12, fit:'heavy', tinymark:76.7, tinymark_model:'gemma3:12b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/google/gemma-3-12b-it' },
-      { name:'Gemma-3-4B', org:'Google', released:'2025-03', params:4, fit:'easy', tinymark:76.7, tinymark_model:'gemma3:4b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/google/gemma-3-4b-it' },
-      { name:'Gemma-4-12B', org:'Google', released:'2026-05', params:12, fit:'heavy', pub_bench:'LiveCodeBench', pub_score:72.0, tinymark:93.3, tinymark_model:'gemma4:12b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/google/gemma-4-12B' },
-      { name:'DeepSeek-R1-Distill-Qwen-14B', org:'DeepSeek', released:'2025-01', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8, tinymark:43.3, tinymark_model:'deepseek-r1:14b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:'In frozen BigCodeBench feed (38.1 instruct); LiveCodeBench pass@1 53.8 per DeepSeek report', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B' },
-      { name:'DeepSeek-R1-Distill-Llama-8B', org:'DeepSeek', released:'2025-01', params:8, fit:'mid', tinymark:56.7, tinymark_model:'deepseek-r1:8b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:'In frozen BigCodeBench feed (10.6 instruct)', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B' },
-      { name:'Phi-4-reasoning', org:'Microsoft', released:'2025-04', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8, tinymark:0.0, tinymark_model:'phi4-reasoning', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:'Card reports LiveCodeBench/AIME; HumanEvalPlus 83.5 on phi-4-plus variant', url:'https://huggingface.co/microsoft/phi-4-reasoning' },
-      { name:'Phi-4-mini-reasoning', org:'Microsoft', released:'2025-04', params:3.8, fit:'easy', tinymark:16.7, tinymark_model:'phi4-mini-reasoning', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/microsoft/Phi-4-mini-reasoning' },
-      { name:'Granite-4.2-8B', org:'IBM', released:'2026', params:8, fit:'mid', swe_verified:47.7, swe_pro:19.1, tinymark:90.0, tinymark_model:'granite4.2:8b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:'Card reports SWE-bench Verified 47.7 / Pro 19.1 (agentic), LiveCodeBench v6 + AIME25; no HumanEval', url:'https://huggingface.co/ibm-granite/granite-4.2-8b' },
-      { name:'Ministral-3-14B', org:'Mistral', released:'2026', params:14, fit:'max', tinymark:100.0, tinymark_model:'ministral-3:14b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512' },
-      { name:'Ministral-3-8B', org:'Mistral', released:'2026', params:8, fit:'mid', tinymark:80.0, tinymark_model:'ministral-3:8b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512' },
-      { name:'Ministral-3-3B', org:'Mistral', released:'2026', params:3, fit:'easy', tinymark:56.7, tinymark_model:'ministral-3:3b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512' },
-      { name:'Cogito-14B', org:'Deep Cogito', released:'2025', params:14, fit:'max', tinymark:93.3, tinymark_model:'cogito:14b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/deepcogito/cogito-v1-preview-qwen-14B' },
-      { name:'Cogito-8B', org:'Deep Cogito', released:'2025', params:8, fit:'mid', tinymark:66.7, tinymark_model:'cogito:8b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/deepcogito/cogito-v1-preview-llama-8B' },
-      { name:'OLMo-3-7B', org:'Ai2', released:'2026', params:7, fit:'mid', tinymark:20.0, tinymark_model:'olmo-3:7b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/allenai/Olmo-3-7B-Instruct' },
-      { name:'OpenThinker-7B', org:'Open Thoughts', released:'2025-01', params:7, fit:'mid', tinymark:50.0, tinymark_model:'openthinker:7b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:null, url:'https://huggingface.co/open-thoughts/OpenThinker-7B' },
+      { name:'Qwen3-14B', org:'Qwen', released:'2025-04', params:14, fit:'max', tinymark:86.2, tinymark_js:87.5, tinymark_py:85.0, tinymark_model:'qwen3:14b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3-14B' },
+      { name:'Qwen3-4B', org:'Qwen', released:'2025-04', params:4, fit:'easy', tinymark:0.0, tinymark_js:0.0, tinymark_py:0.0, tinymark_model:'qwen3:4b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3-4B' },
+      { name:'Qwen3.5-9B', org:'Qwen', released:'2026-02', params:9, fit:'mid', pub_bench:'LiveCodeBench', pub_score:65.6, tinymark:73.8, tinymark_js:62.5, tinymark_py:85.0, tinymark_model:'qwen3.5:9b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3.5-9B' },
+      { name:'Qwen3.5-4B', org:'Qwen', released:'2026-02', params:4, fit:'easy', pub_bench:'LiveCodeBench', pub_score:55.8, tinymark:70.0, tinymark_js:65.0, tinymark_py:75.0, tinymark_model:'qwen3.5:4b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/Qwen/Qwen3.5-4B' },
+      { name:'Gemma-3-12B', org:'Google', released:'2025-03', params:12, fit:'heavy', tinymark:71.2, tinymark_js:57.5, tinymark_py:85.0, tinymark_model:'gemma3:12b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/google/gemma-3-12b-it' },
+      { name:'Gemma-3-4B', org:'Google', released:'2025-03', params:4, fit:'easy', tinymark:72.5, tinymark_js:70.0, tinymark_py:75.0, tinymark_model:'gemma3:4b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/google/gemma-3-4b-it' },
+      { name:'Gemma-4-12B', org:'Google', released:'2026-05', params:12, fit:'heavy', pub_bench:'LiveCodeBench', pub_score:72.0, tinymark:87.5, tinymark_js:82.5, tinymark_py:92.5, tinymark_model:'gemma4:12b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/google/gemma-4-12B' },
+      { name:'DeepSeek-R1-Distill-Qwen-14B', org:'DeepSeek', released:'2025-01', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8, tinymark:0.0, tinymark_js:0.0, tinymark_py:0.0, tinymark_model:'deepseek-r1:14b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:'In frozen BigCodeBench feed (38.1 instruct); LiveCodeBench pass@1 53.8 per DeepSeek report', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B' },
+      { name:'DeepSeek-R1-Distill-Llama-8B', org:'DeepSeek', released:'2025-01', params:8, fit:'mid', tinymark:30.0, tinymark_js:30.0, tinymark_py:30.0, tinymark_model:'deepseek-r1:8b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:'In frozen BigCodeBench feed (10.6 instruct)', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Llama-8B' },
+      { name:'Phi-4-reasoning', org:'Microsoft', released:'2025-04', params:14, fit:'max', pub_bench:'LiveCodeBench', pub_score:53.8, tinymark:0.0, tinymark_js:0.0, tinymark_py:0.0, tinymark_model:'phi4-reasoning', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:'Card reports LiveCodeBench/AIME; HumanEvalPlus 83.5 on phi-4-plus variant', url:'https://huggingface.co/microsoft/phi-4-reasoning' },
+      { name:'Phi-4-mini-reasoning', org:'Microsoft', released:'2025-04', params:3.8, fit:'easy', tinymark:1.2, tinymark_js:0.0, tinymark_py:2.5, tinymark_model:'phi4-mini-reasoning', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/microsoft/Phi-4-mini-reasoning' },
+      { name:'Granite-4.2-8B', org:'IBM', released:'2026', params:8, fit:'mid', swe_verified:47.7, swe_pro:19.1, tinymark:80.0, tinymark_js:77.5, tinymark_py:82.5, tinymark_model:'granite4.2:8b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:'Card reports SWE-bench Verified 47.7 / Pro 19.1 (agentic), LiveCodeBench v6 + AIME25; no HumanEval', url:'https://huggingface.co/ibm-granite/granite-4.2-8b' },
+      { name:'Ministral-3-14B', org:'Mistral', released:'2026', params:14, fit:'max', tinymark:87.5, tinymark_js:87.5, tinymark_py:87.5, tinymark_model:'ministral-3:14b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/mistralai/Ministral-3-14B-Instruct-2512' },
+      { name:'Ministral-3-8B', org:'Mistral', released:'2026', params:8, fit:'mid', tinymark:81.2, tinymark_js:72.5, tinymark_py:90.0, tinymark_model:'ministral-3:8b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512' },
+      { name:'Ministral-3-3B', org:'Mistral', released:'2026', params:3, fit:'easy', tinymark:62.5, tinymark_js:47.5, tinymark_py:77.5, tinymark_model:'ministral-3:3b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512' },
+      { name:'Cogito-14B', org:'Deep Cogito', released:'2025', params:14, fit:'max', tinymark:86.2, tinymark_js:87.5, tinymark_py:85.0, tinymark_model:'cogito:14b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/deepcogito/cogito-v1-preview-qwen-14B' },
+      { name:'Cogito-8B', org:'Deep Cogito', released:'2025', params:8, fit:'mid', tinymark:58.8, tinymark_js:55.0, tinymark_py:62.5, tinymark_model:'cogito:8b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/deepcogito/cogito-v1-preview-llama-8B' },
+      { name:'OLMo-3-7B', org:'Ai2', released:'2026', params:7, fit:'mid', tinymark:1.2, tinymark_js:0.0, tinymark_py:2.5, tinymark_model:'olmo-3:7b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/allenai/Olmo-3-7B-Instruct' },
+      { name:'OpenThinker-7B', org:'Open Thoughts', released:'2025-01', params:7, fit:'mid', tinymark:8.8, tinymark_js:10.0, tinymark_py:7.5, tinymark_model:'openthinker:7b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:null, url:'https://huggingface.co/open-thoughts/OpenThinker-7B' },
       { name:'DeepSeek-R1-0528-Qwen3-8B', org:'DeepSeek', released:'2025-05', params:8, fit:'mid', pub_bench:'LiveCodeBench', pub_score:60.5, note:'DeepSeek distilled R1-0528 reasoning into Qwen3-8B: card reports AIME24 86.0 / AIME25 76.3 / LiveCodeBench 60.5 — SOTA for open ≤8B at release. The card\'s SWE-bench table is for the 671B parent (R1 49.2 / R1-0528 57.6), not this 8B distill — no own SWE-bench. No HumanEval+/BigCodeBench comparable run yet.', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-0528-Qwen3-8B' },
       { name:'DeepCoder-1.5B-Preview', org:'Agentica', released:'2025-04', params:1.5, fit:'easy', pub_bench:'LiveCodeBench', pub_score:25.1, note:'1.5B sibling of the benchmarked 14B. Card self-reports HumanEval+ 73.0 and LiveCodeBench v5 25.1 — self-reported and unverified, same class as the SOTA2 Qwen3-1.7B claim our run refuted; needs a local run.', url:'https://huggingface.co/agentica-org/DeepCoder-1.5B-Preview' },
       { name:'Olmo-3.1-7B-RL-Zero-Code', org:'Ai2', released:'2025-12', params:7, fit:'mid', note:'Ai2 RL-Zero code model (Dolci-RL-Zero-Code dataset, fully open). No pass@1 numbers published on the card yet — only appears in our newest-model sweep.', url:'https://huggingface.co/allenai/Olmo-3.1-7B-RL-Zero-Code' },
       { name:'DeepSeek-R1-Distill-Qwen-1.5B', org:'DeepSeek', released:'2025-01', params:1.5, fit:'easy', pub_bench:'LiveCodeBench', pub_score:16.9, note:'Official R1 reasoning distill at 1.5B. Card reports AIME24 28.9 / LiveCodeBench 16.9 / Codeforces 954 — modest but the smallest usable R1 family member.', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B' },
       { name:'DeepSeek-R1-Distill-Qwen-7B', org:'DeepSeek', released:'2025-01', params:7, fit:'mid', pub_bench:'LiveCodeBench', pub_score:37.6, note:'Official R1 reasoning distill at 7B. Card reports AIME24 55.5 / LiveCodeBench 37.6 / Codeforces 1189. On our run queue alongside the other 8B-class candidates.', url:'https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B' },
-      { name:'Ornith-1.5-9B', org:'Ornith', released:'2026', params:9, fit:'mid', swe_verified:70.6, swe_pro:47.5, tinymark:83.3, tinymark_model:'ornith-1.5:9b', tinymark_harness:'ollama', tinymark_tasks:30.0, tinymark_level:'large', note:'Agentic-tuned (self-improvement RL): SWE-bench Verified 70.6 / Pro 47.5 — its strengths are agentic/long-horizon, so it under-performs single-turn pass@1 benchmarks by design. No HumanEval+/LiveCodeBench.', url:'https://huggingface.co/ornith-ai/Ornith-1.5-9B' },
+      { name:'Ornith-1.5-9B', org:'Ornith', released:'2026', params:9, fit:'mid', swe_verified:70.6, swe_pro:47.5, tinymark:82.5, tinymark_js:77.5, tinymark_py:87.5, tinymark_model:'ornith-1.5:9b', tinymark_harness:'js+py', tinymark_tasks:40.0, tinymark_level:'large', note:'Agentic-tuned (self-improvement RL): SWE-bench Verified 70.6 / Pro 47.5 — its strengths are agentic/long-horizon, so it under-performs single-turn pass@1 benchmarks by design. No HumanEval+/LiveCodeBench.', url:'https://huggingface.co/ornith-ai/Ornith-1.5-9B' },
     ];
-    const state = { query: '', fit: 'all', score: 'plus', selected: 0, sort: 'plus', direction: 'desc', psort: 'released', pdir: 'desc', selectedPending: 0, tsort: 'tinymark', tdir: 'desc' };
+    const state = { query: '', fit: 'all', score: 'plus', selected: 0, sort: 'plus', direction: 'desc', psort: 'released', pdir: 'desc', selectedPending: 0, selectedTM: 0, tsort: 'tinymark', tdir: 'desc' };
     // Shared fit-tier rank for sorting the Local fit columns of both tables.
     const FITRANK = { easy: 1, mid: 2, heavy: 3, max: 4 };
     // Pending Eval table sort — its own namespace (data-psort) so it never
@@ -1044,16 +1055,49 @@
       const pub = (m.pub_score != null) ? `<span class="score">${m.pub_score.toFixed(1)}%</span><span class="subscore">card · ${m.pub_bench || 'LiveCodeBench'}</span>` : '<span class="score">—</span>';
       pd.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params}${m.released ? ' · released ' + fmtRel(m.released) : ''}</div><div class="detail-fit"><strong>${labels[m.fit]}</strong><span>${m.fit === 'max' ? 'Max spec tier — assumes 24GB+ unified memory or VRAM.' : 'Typical fit for running this model locally.'}</span></div><div class="detail-grid"><div class="detail-metric"><small>Params</small><strong>${params}</strong></div><div class="detail-metric"><small>Released</small><strong>${rel}</strong></div><div class="detail-metric"><small>${m.pub_bench || 'Published'}</small>${pub}</div><div class="detail-metric"><small>SWE-bench</small>${sweCell(m)}</div><div class="detail-metric"><small>Local fit</small><strong>${labels[m.fit]}</strong></div></div>${m.note ? `<p>${m.note}</p>` : ''}${m.url ? `<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a>` : ''}</div>`;
     }
+    function tmSrc(m) { if (Array.isArray(m.plus)) return m.plus.reduce((a, b) => a + b, 0) / m.plus.length; return (m.plus != null ? m.plus : m.pub_score); }
+    function rankArr(v) { const s = [...v].sort((a, b) => a - b); return v.map(x => s.indexOf(x) + 1); }
+    function spearman(xs, ys) {
+      const rx = rankArr(xs), ry = rankArr(ys), n = xs.length;
+      const mx = rx.reduce((a, b) => a + b, 0) / n, my = ry.reduce((a, b) => a + b, 0) / n;
+      let cov = 0, vx = 0, vy = 0;
+      for (let i = 0; i < n; i++) { cov += (rx[i] - mx) * (ry[i] - my); vx += (rx[i] - mx) ** 2; vy += (ry[i] - my) ** 2; }
+      return cov / Math.sqrt(vx * vy);
+    }
     function renderTinyMark() {
       const tb = document.querySelector('#tinymark-body');
       if (!tb) return;
+      const note = document.querySelector('#tinymark-note');
+      const aligned = [...models, ...pending].filter(m => m.tinymark != null && tmSrc(m) != null);
+      if (note && aligned.length >= 3) {
+        const xs = aligned.map(tmSrc), ys = aligned.map(m => m.tinymark);
+        const rho = spearman(xs, ys);
+        let worst = null, worstD = -1;
+        aligned.forEach((m, i) => { const d = Math.abs(xs[i] - ys[i]); if (d > worstD) { worstD = d; worst = m; } });
+        const wi = aligned.indexOf(worst);
+        const bench = worst.pub_score != null ? 'LiveCodeBench' : 'HumanEval+';
+        note.textContent = `TinyMark — one-shot coding performance, in development. Its rankings generally align with larger benchmarks (rank correlation ρ ${rho.toFixed(2)} across ${aligned.length} models); some models diverge, e.g. ${worst.name} scores ${worst.tinymark.toFixed(1)} here vs ${xs[wi].toFixed(1)} on ${bench}.`;
+      }
       const all = tSorted();
+      if (state.selectedTM >= all.length) state.selectedTM = 0;
       tb.innerHTML = all.map((m, i) => {
         const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—');
         const tasks = m.tinymark_tasks != null ? `${m.tinymark_tasks} problems` : '';
         const lvl = m.tinymark_level ? ` · ${m.tinymark_level}` : '';
-        return `<tr><td class="rank">${String(i + 1).padStart(2, '0')}</td><td><span class="model-name">${m.name}</span><span class="model-org">${m.org}</span></td><td class="mono">${params}</td><td><span class="score">${m.tinymark.toFixed(1)}%</span><span class="subscore">pass@1 · ${tasks}${lvl}</span></td><td class="mono">${m.tinymark_model || '—'}</td><td class="mono">${m.tinymark_harness || '—'}</td><td><span class="fit ${m.fit}">${labels[m.fit]}</span></td></tr>`;
+        return `<tr class="${i === state.selectedTM ? 'selected' : ''}" data-tindex="${i}"><td class="rank">${String(i + 1).padStart(2, '0')}</td><td><span class="model-name">${m.name}</span><span class="model-org">${m.org}${relSub(m)}</span></td><td class="mono">${params}</td><td><span class="score">${m.tinymark.toFixed(1)}%</span><span class="subscore">pass@1 · ${tasks}${lvl}</span></td><td class="mono">${m.tinymark_model || '—'}</td><td class="mono">${m.tinymark_harness || '—'}</td><td><span class="fit ${m.fit}">${labels[m.fit]}</span></td></tr>`;
       }).join('');
+      tb.querySelectorAll('tr[data-tindex]').forEach(row => row.addEventListener('click', () => { state.selectedTM = Number(row.dataset.tindex); renderTinyMark(); }));
+      renderTinyDetail();
+    }
+    function renderTinyDetail() {
+      const td = document.querySelector('#detail-tinymark');
+      if (!td) return;
+      const all = tSorted();
+      const m = all[state.selectedTM] || all[0];
+      if (!m) { td.innerHTML = ''; return; }
+      const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—');
+      const tasks = m.tinymark_tasks != null ? `${m.tinymark_tasks} problems` : '—';
+      td.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params}${relSub(m)}</div><div class="detail-fit"><strong>${labels[m.fit]}</strong><span>${m.fit === 'max' ? 'Max spec tier — assumes 24GB+ unified memory or VRAM.' : 'Typical fit for running this model locally.'}</span></div><div class="detail-grid"><div class="detail-metric"><small>TinyMark</small><strong>${m.tinymark.toFixed(1)}%</strong></div><div class="detail-metric"><small>Tasks</small><strong>${tasks}</strong></div><div class="detail-metric"><small>Level</small><strong>${m.tinymark_level || '—'}</strong></div><div class="detail-metric"><small>Ollama model</small><strong>${m.tinymark_model || '—'}</strong></div><div class="detail-metric"><small>Harness</small><strong>${m.tinymark_harness || '—'}</strong></div><div class="detail-metric"><small>Local fit</small><strong>${labels[m.fit]}</strong></div></div>${m.note ? `<p>${m.note}</p>` : ''}${m.url ? `<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a>` : ''}</div>`;
     }
     document.querySelectorAll('[data-sort]').forEach(th => th.addEventListener('click', () => applySort(th.dataset.sort)));
     document.querySelectorAll('[data-psort]').forEach(th => th.addEventListener('click', () => applyPSort(th.dataset.psort)));
