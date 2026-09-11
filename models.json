@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Inchworm roster (canonical). Edit this file, then run `python3 scripts/build_page.py` to regenerate index.html's data layer. benchmarked = the 'Benchmarked' tab rows; pending = the 'Pending Eval' tab (newer models, no comparable scores yet); candidates_no_benchmarks is a discovery pool never rendered.",
-    "snapshot": "2026-09-05",
+    "snapshot": "2026-09-11",
     "sources": [
       "https://evalplus.github.io/leaderboard.html",
       "https://huggingface.co/datasets/bigcode/bigcodebench-results",
@@ -460,21 +460,40 @@
       "best": "Fresh local eval result.",
       "note": "HumanEval scores from local self-evaluation run.",
       "url": "https://huggingface.co/ibm-granite/granite-4.2-3b"
+    },
+    {
+      "name": "K2-Horizon-0.9B",
+      "org": "IFM",
+      "released": "2026-09",
+      "params": 1.1,
+      "plus": 79.9,
+      "base": null,
+      "fit": "easy",
+      "memory": "~1 GB @ 4-bit",
+      "best": "A sub-1B model posting a near-top HumanEval+ — the boldest small-model claim on this page.",
+      "note": "Compact dense member of IFM's fully open K2-Horizon family (0.9B core / 1.1B total, 128K context via YaRN, multi-teacher distillation). Its card reports HumanEval+ 79.9 and MBPP+ 68.0, ahead of Qwen3.5-2B (75.6) and MiniCPM5-1B (65.2) on the same table. That is a vendor number with no independent EvalPlus run behind it, so treat it as directional until we self-evaluate locally; BigCodeBench has not covered it. Not yet runnable in TinyMark: its GGUFs declare the new k2-horizon architecture, which upstream llama.cpp (and therefore Ollama 0.34.0) cannot load — it needs MBZUAI-IFM's llama.cpp fork, or a merged upstream PR plus an Ollama bump that ships it.",
+      "url": "https://huggingface.co/IFM/K2-Horizon-0.9B",
+      "mbpp_plus": 68.0
     }
   ],
   "pending": [
     {
-      "name": "LFM2.5",
+      "name": "LFM2.5-8B-A1B",
       "org": "Liquid AI",
-      "params": null,
-      "fit": "easy",
-      "url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B"
+      "params": 8.5,
+      "fit": "mid",
+      "type": "edge MoE (8.5B total, ~1B active)",
+      "url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B",
+      "released": "2026-05"
     },
     {
       "name": "Ling-3.0-Tiny",
-      "org": "Inclusion candidate",
-      "params": "≤14B",
-      "fit": "mid"
+      "org": "InclusionAI",
+      "params": 7.9,
+      "fit": "mid",
+      "type": "hybrid reasoning MoE (7.9B total, 1.3B active)",
+      "url": "https://huggingface.co/inclusionAI/Ling-3.0-tiny",
+      "released": "2026-08"
     },
     {
       "name": "Qwen3-14B",
@@ -520,13 +539,13 @@
       "ollama": "qwen3.5:9b",
       "pub_bench": "LiveCodeBench",
       "pub_score": 65.6,
-      "tinymark": 73.8,
+      "tinymark": 77.5,
       "tinymark_model": "qwen3.5:9b",
       "tinymark_harness": "js+py",
       "tinymark_tasks": 40,
       "url": "https://huggingface.co/Qwen/Qwen3.5-9B",
       "tinymark_level": "large",
-      "tinymark_js": 62.5,
+      "tinymark_js": 70.0,
       "tinymark_py": 85.0
     },
     {
@@ -557,12 +576,12 @@
       "type": "general (multimodal)",
       "ollama": "gemma3:12b",
       "url": "https://huggingface.co/google/gemma-3-12b-it",
-      "tinymark": 71.2,
+      "tinymark": 72.5,
       "tinymark_model": "gemma3:12b",
       "tinymark_harness": "js+py",
       "tinymark_tasks": 40,
       "tinymark_level": "large",
-      "tinymark_js": 57.5,
+      "tinymark_js": 60.0,
       "tinymark_py": 85.0
     },
     {
@@ -681,12 +700,14 @@
       "org": "IBM",
       "params": 8,
       "fit": "mid",
-      "released": "2026",
+      "released": "2026-08",
       "type": "enterprise (coding/RAG/tools)",
       "ollama": "granite4.2:8b",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 73.2,
       "swe_verified": 47.7,
       "swe_pro": 19.1,
-      "note": "Card reports SWE-bench Verified 47.7 / Pro 19.1 (agentic), LiveCodeBench v6 + AIME25; no HumanEval",
+      "note": "Card (release date 25 Aug 2026) reports LiveCodeBench v6 73.2, plus SWE-bench Verified 47.7 / Pro 19.1 under an agentic harness; no HumanEval",
       "url": "https://huggingface.co/ibm-granite/granite-4.2-8b",
       "tinymark": 80.0,
       "tinymark_model": "granite4.2:8b",
@@ -722,12 +743,12 @@
       "type": "edge deployment",
       "ollama": "ministral-3:8b",
       "url": "https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512",
-      "tinymark": 81.2,
+      "tinymark": 85.0,
       "tinymark_model": "ministral-3:8b",
       "tinymark_harness": "js+py",
       "tinymark_tasks": 40,
       "tinymark_level": "large",
-      "tinymark_js": 72.5,
+      "tinymark_js": 80.0,
       "tinymark_py": 90.0
     },
     {
@@ -739,12 +760,12 @@
       "type": "edge deployment",
       "ollama": "ministral-3:3b",
       "url": "https://huggingface.co/mistralai/Ministral-3-3B-Instruct-2512",
-      "tinymark": 62.5,
+      "tinymark": 72.5,
       "tinymark_model": "ministral-3:3b",
       "tinymark_harness": "js+py",
       "tinymark_tasks": 40,
       "tinymark_level": "large",
-      "tinymark_js": 47.5,
+      "tinymark_js": 67.5,
       "tinymark_py": 77.5
     },
     {
@@ -892,6 +913,71 @@
       "tinymark_level": "large",
       "tinymark_js": 77.5,
       "tinymark_py": 87.5
+    },
+    {
+      "name": "Nanbeige4.2-3B",
+      "org": "Nanbeige",
+      "released": "2026-07",
+      "params": 4,
+      "fit": "easy",
+      "type": "agentic coder (looped transformer)",
+      "ollama": "hf.co/owao/Nanbeige4.2-3B-GGUF",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 72.5,
+      "swe_verified": 63.6,
+      "swe_pro": 46.9,
+      "note": "4B total / 3B non-embedding looped-transformer coder. Card claims it beats Qwen3.5-9B and Gemma4-12B on code-agent work: LiveCodeBench-V6 72.5, SWE-bench Verified 63.6 (OpenHands), Pro 46.9, Terminal-Bench 2.0 44.1. No HumanEval reported, so that column stays —.",
+      "url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B",
+      "tinymark": 67.5,
+      "tinymark_js": 57.5,
+      "tinymark_py": 77.5,
+      "tinymark_model": "hf.co/owao/Nanbeige4.2-3B-GGUF",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large"
+    },
+    {
+      "name": "MiniCPM5-2B",
+      "org": "OpenBMB",
+      "released": "2026-09",
+      "params": 2.5,
+      "fit": "easy",
+      "type": "on-device assistant/coder (Apache-2.0)",
+      "ollama": "openbmb/minicpm5-2b",
+      "pub_bench": "LiveCodeBench",
+      "pub_score": 69.1,
+      "swe_verified": 46.4,
+      "note": "Dense 2.5B (1.98B non-embedding), 131K context, Apache-2.0, built for local assistants and coding agents. Card reports LiveCodeBench v6 69.1 — ahead of Qwen3.5-4B (56.4) and Gemma-4-E4B (53.9) — and SWE-bench Verified 46.4; no HumanEval, so that column stays —.",
+      "url": "https://huggingface.co/openbmb/MiniCPM5-2B",
+      "tinymark": 55.0,
+      "tinymark_js": 50.0,
+      "tinymark_py": 60.0,
+      "tinymark_model": "openbmb/minicpm5-2b",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large"
+    },
+    {
+      "name": "K2-Horizon-7B",
+      "org": "IFM",
+      "released": "2026-09",
+      "params": 9,
+      "fit": "mid",
+      "type": "dense agentic coder (512K ctx, fully open)",
+      "swe_verified": 70.6,
+      "note": "Fully open dense model from the Institute of Foundation Models — 7B core / 9B total, native 512K context, training data and recipe published. Card reports SWE-bench Verified 70.6 and SciCode 31.6 but no LiveCodeBench or HumanEval: it is tuned for agentic/long-horizon work, so single-turn columns stay —. Not yet runnable in TinyMark: its GGUF declares the new k2-horizon architecture, which upstream llama.cpp (and therefore Ollama 0.34.0) cannot load.",
+      "url": "https://huggingface.co/IFM/K2-Horizon-7B"
+    },
+    {
+      "name": "K2-Horizon-3.7B",
+      "org": "IFM",
+      "released": "2026-09",
+      "params": 5.1,
+      "fit": "mid",
+      "type": "dense agentic coder (512K ctx, fully open)",
+      "swe_verified": 68.6,
+      "note": "Small dense sibling of K2-Horizon-7B (3.7B core / 5.1B total, native 512K context, fully open). Card reports SWE-bench Verified 68.6, SciCode 25.9, Terminal-Bench 2.1 25.1 and HMMT Feb 2026 70.5, but no HumanEval or LiveCodeBench — agentic-tuned, so single-turn columns stay —. Not yet runnable in TinyMark: its GGUF declares the new k2-horizon architecture, which upstream llama.cpp (and therefore Ollama 0.34.0) cannot load.",
+      "url": "https://huggingface.co/IFM/K2-Horizon-3.7B"
     }
   ],
   "candidates_no_benchmarks": {
