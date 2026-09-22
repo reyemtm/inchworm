@@ -1063,7 +1063,7 @@
     // Missing values (no released, no card LCB, no SWE-bench, no TinyMark run,
     // non-numeric params) sort last in either direction, matching the
     // Benchmarked table's score columns.
-    function applyPSort(field) { if (state.psort === field) { state.pdir = state.pdir === 'desc' ? 'asc' : 'desc'; } else { state.psort = field; state.pdir = 'desc'; } markPSort(); renderPending(); }
+    function applyPSort(field) { if (state.psort === field) { state.pdir = state.pdir === 'desc' ? 'asc' : 'desc'; } else { state.psort = field; state.pdir = 'desc'; } markPSort(); renderPending(); syncHash(); }
     function markPSort() { document.querySelectorAll('th[data-psort]').forEach(th => { const span = th.querySelector('.sortmark'); if (span) span.textContent = th.dataset.psort === state.psort ? (state.pdir === 'desc' ? '▼' : '▲') : ''; }); }
     function pVal(m) { switch (state.psort) { case 'name': return (m.name || '').toLowerCase(); case 'params': return typeof m.params === 'number' ? m.params : null; case 'released': return m.released || null; case 'pub': return typeof m.pub_score === 'number' ? m.pub_score : null; case 'swe': { const v = Math.max(m.swe_verified ?? -1, m.swe_pro ?? -1); return v >= 0 ? v : null; } case 'tinymark': return typeof m.tinymark === 'number' ? m.tinymark : null; case 'fit': return FITRANK[m.fit] || 0; } }
     // Direction is applied only to value comparison — the missing-value
@@ -1074,7 +1074,7 @@
     // with the bench (data-sort) or pending (data-psort) bindings. First click
     // sorts descending, subsequent clicks toggle, like the other two tables.
     // Missing values (non-numeric params/tinymark) sort last in either direction.
-    function applyTSort(field) { if (state.tsort === field) { state.tdir = state.tdir === 'desc' ? 'asc' : 'desc'; } else { state.tsort = field; state.tdir = 'desc'; } markTSort(); renderTinyMark(); }
+    function applyTSort(field) { if (state.tsort === field) { state.tdir = state.tdir === 'desc' ? 'asc' : 'desc'; } else { state.tsort = field; state.tdir = 'desc'; } markTSort(); renderTinyMark(); syncHash(); }
     function markTSort() { document.querySelectorAll('th[data-tsort]').forEach(th => { const span = th.querySelector('.sortmark'); if (span) span.textContent = th.dataset.tsort === state.tsort ? (state.tdir === 'desc' ? '▼' : '▲') : ''; }); }
     function tVal(m) { switch (state.tsort) { case 'name': return (m.name || '').toLowerCase(); case 'params': return typeof m.params === 'number' ? m.params : null; case 'tinymark': return typeof m.tinymark === 'number' ? m.tinymark : null; case 'adv': return typeof m.tinymark_adv === 'number' ? m.tinymark_adv : null; } }
     function tCmp(a, b, dir) { const am = tVal(a) == null, bm = tVal(b) == null; if (am && bm) return 0; if (am) return 1; if (bm) return -1; const va = tVal(a), vb = tVal(b); const c = typeof va === 'string' || typeof vb === 'string' ? String(va).localeCompare(String(vb)) : va - vb; return c * dir; }
@@ -1092,7 +1092,7 @@
       const dir = state.tdir === 'asc' ? 1 : -1;
       return all.sort((a, b) => tCmp(a, b, dir));
     }
-    function applySort(field) { if (state.sort === field) { state.direction = state.direction === 'desc' ? 'asc' : 'desc'; } else { state.sort = field; state.direction = 'desc'; } markSort(); render(); }
+    function applySort(field) { if (state.sort === field) { state.direction = state.direction === 'desc' ? 'asc' : 'desc'; } else { state.sort = field; state.direction = 'desc'; } markSort(); render(); syncHash(); }
     function markSort() { document.querySelectorAll('th[data-sort]').forEach(th => { const span = th.querySelector('.sortmark'); if (span) span.textContent = th.dataset.sort === state.sort ? (state.direction === 'desc' ? '▼' : '▲') : ''; }); }
     const body = document.querySelector('#leaderboard-body');
     const detail = document.querySelector('#detail');
@@ -1122,7 +1122,7 @@
       const rows = filtered();
       body.innerHTML = rows.map((m, i) => { const actual = models.indexOf(m); const plus = scoreAvg(m.plus); const bcb = scoreAvg(m.bcb); const dfl = conflicts(m); const agr = agreeing(m); const plusN = scoreCount(m.plus); const bcbN = scoreCount(m.bcb); const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—'); return `<tr class="${actual === state.selected ? 'selected' : ''}" data-index="${actual}"><td class="rank">${String(i + 1).padStart(2, '0')}</td><td><span class="model-name">${m.name}</span><span class="model-org">${m.org}${relSub(m)}</span></td><td class="mono">${params}</td><td>${plus != null ? `<span class="score ${state.score === 'plus' ? 'best' : ''} ${tier(plus)}${dfl ? ' conflict' : ''}"${dfl ? ` title="Published avg ${plus.toFixed(1)}% conflicts with our local run (${m.local.toFixed(1)}%)"` : agr ? ` title="Published avg ${plus.toFixed(1)}% verified by our local run (${m.local.toFixed(1)}%, within ${DISPUTE} points)"` : ''}>${plus.toFixed(1)}%${plusN > 1 ? ' <small>avg</small>' : ''}${m.plus_source === 'self-eval' ? '*' : ''}${dfl ? '†' : ''}</span><span class="subscore">${(dfl ? 'pass@1 · conflict' : (agr ? 'pass@1 · verified' : (m.plus_source === 'self-eval' ? 'self-eval · pass@1' : (plusN > 1 ? `avg of ${plusN} scores` : 'pass@1'))))}</span>` : '<span class="score">—</span>'}</td><td>${bcb != null ? `<span class="score">${bcb.toFixed(1)}%</span><span class="subscore">${m.bcb_mode || 'instruct'} · ${bcbN > 1 ? `avg of ${bcbN}` : 'full set'}</span>` : '<span class="score">—</span>'}</td><td>${m.local != null ? `<span class="score ${state.score === 'local' ? 'best' : ''}">${m.local.toFixed(1)}%</span><span class="subscore">self-eval · HumanEval+</span>` : '<span class="score">—</span>'}</td><td><span class="fit ${m.fit}">${labels[m.fit]}</span></td></tr>`; }).join('');
       document.querySelector('#empty-state').hidden = rows.length > 0;
-      body.querySelectorAll('tr[data-index]').forEach(row => row.addEventListener('click', () => { state.selected = Number(row.dataset.index); render(); }));
+      body.querySelectorAll('tr[data-index]').forEach(row => row.addEventListener('click', () => { state.selected = Number(row.dataset.index); render(); syncHash(); }));
       renderDetail();
     }
     function renderDetail() { const m = models[state.selected]; const plus = scoreAvg(m.plus); const mbpp = scoreAvg(m.mbpp_plus); const bcb = scoreAvg(m.bcb); const bcbHard = scoreAvg(m.bcb_hard); const dfl = conflicts(m); const agr = agreeing(m); const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—'); detail.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params} parameters${relSub(m)}</div><div class="detail-fit"><strong>${labels[m.fit]}${m.fit === 'max' ? '' : ' for most laptops'}</strong><span>${m.memory} memory estimate for a 4-bit quantization.</span></div><div class="detail-grid"><div class="detail-metric"><small>HumanEval+${dfl ? ' · conflict' : agr ? ' · verified' : ''}</small><strong class="${plus != null ? tier(plus) : ''}${dfl ? ' conflict' : ''}"${dfl ? ` title="Published avg ${plus.toFixed(1)}% conflicts with our local run (${m.local.toFixed(1)}%)"` : agr ? ` title="Published avg ${plus.toFixed(1)}% verified by our local run (${m.local.toFixed(1)}%, within ${DISPUTE} points)"` : ''}>${plus != null ? (plus.toFixed(1) + '%' + (scoreCount(m.plus) > 1 ? ' <small>avg</small>' : '')) : '—'}${dfl ? '†' : ''}</strong>${dfl ? `<span class="subscore">local run: ${m.local.toFixed(1)}%</span>` : ''}</div><div class="detail-metric"><small>MBPP+</small><strong>${mbpp != null ? mbpp.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>BigCodeBench${m.bcb_mode ? ` · ${m.bcb_mode}` : ''}</small><strong>${bcb != null ? bcb.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>BigCodeBench hard</small><strong>${bcbHard != null ? bcbHard.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>Quantized size</small><strong>${m.memory.split(' ')[0]}</strong></div></div><p><strong>Best for:</strong> ${m.best}</p><p>${m.note}</p><a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a></div>`; }
@@ -1156,7 +1156,7 @@
         const pub = (m.pub_score != null) ? `<span class="score">${m.pub_score.toFixed(1)}%</span><span class="subscore">card · ${m.pub_bench || 'LiveCodeBench'}</span>` : '<span class="score">—</span>';
         return `<tr class="${actual === state.selectedPending ? 'selected' : ''}" data-pindex="${actual}"><td class="rank">${String(i + 1).padStart(2, '0')}</td><td><span class="model-name">${m.name}</span><span class="model-org">${m.org}</span></td><td class="mono">${params}</td><td class="mono">${rel}</td><td>${pub}</td><td>${sweCell(m)}</td><td>${tmCell(m)}</td><td><span class="fit ${m.fit}">${labels[m.fit]}</span></td></tr>`;
       }).join('');
-      tb.querySelectorAll('tr[data-pindex]').forEach(row => row.addEventListener('click', () => { state.selectedPending = Number(row.dataset.pindex); renderPending(); }));
+      tb.querySelectorAll('tr[data-pindex]').forEach(row => row.addEventListener('click', () => { state.selectedPending = Number(row.dataset.pindex); renderPending(); syncHash(); }));
       renderPendingDetail();
     }
     function renderPendingDetail() {
@@ -1206,7 +1206,7 @@
           : '<span class="subscore">—</span>';
         return `<tr class="${i === state.selectedTM ? 'selected' : ''}" data-tindex="${i}"><td class="rank">${String(i + 1).padStart(2, '0')}</td><td><span class="model-name">${m.name}</span><span class="model-org">${m.org}${relSub(m)}</span></td><td class="mono">${params}</td><td><span class="score">${m.tinymark.toFixed(1)}%</span><span class="subscore">${sub}</span></td><td>${adv}</td><td class="mono">${m.tinymark_model || '—'}</td><td class="mono">${m.tinymark_harness || '—'}</td><td><span class="fit ${m.fit}">${labels[m.fit]}</span></td></tr>`;
       }).join('');
-      tb.querySelectorAll('tr[data-tindex]').forEach(row => row.addEventListener('click', () => { state.selectedTM = Number(row.dataset.tindex); renderTinyMark(); }));
+      tb.querySelectorAll('tr[data-tindex]').forEach(row => row.addEventListener('click', () => { state.selectedTM = Number(row.dataset.tindex); renderTinyMark(); syncHash(); }));
       renderTinyDetail();
     }
     function renderTinyDetail() {
@@ -1233,13 +1233,72 @@
 
     const themeToggle = document.querySelector('#theme-toggle');
     const tabButtons = document.querySelectorAll('[role="tab"]');
-    tabButtons.forEach(tab => tab.addEventListener('click', () => {
+
+    // ------------------------------------------------------------------
+    // URL hash routing — deep links to a tab plus a selected model.
+    //
+    // Format: #<tab>[/<model-slug>]  e.g.  #tiny/qwen3-8b  or  #sources
+    // Slugs are derived from the model name (lowercase, non-alphanumerics
+    // collapsed to '-', trimmed) — params would be ambiguous (three 14B
+    // rows) and names are unique. The hash is written via replaceState so
+    // selecting around the tables doesn't spam the back button; back/forward
+    // still work because popstate re-applies whatever hash it lands on.
+    //
+    // The tab switches and model selections funnel through here (callers set
+    // state, then call syncHash()) so the URL always reflects the view.
+    const TAB_IDS = { bench: 'coding-tab', pending: 'watchlist-tab', tiny: 'tinymark-tab', sources: 'sources-tab' };
+    const slugify = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const findModel = slug => slug ? [...models, ...pending].find(m => slugify(m.name) === slug) : null;
+
+    function activateTab(key, skipHash) {
+      const tab = document.getElementById(TAB_IDS[key]);
+      if (!tab) return;
       tabButtons.forEach(t => { t.classList.toggle('active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
       document.querySelectorAll('.tab-panel').forEach(panel => { panel.hidden = panel.id !== tab.getAttribute('aria-controls'); });
       // Methodology & sources footer only shows while the Sources tab is active.
       const methodology = document.querySelector('#methodology');
       if (methodology) methodology.hidden = tab.getAttribute('aria-controls') !== 'sources-panel';
+      if (!skipHash) syncHash();
+    }
+
+    function currentTabKey() {
+      const active = document.querySelector('[role="tab"].active');
+      return Object.keys(TAB_IDS).find(k => TAB_IDS[k] === (active && active.id)) || 'bench';
+    }
+
+    function syncHash() {
+      const tab = currentTabKey();
+      // The TinyMark table renders from the SORTED array (tSorted), so its
+      // selection index is a sorted-position, not a pooled-const position.
+      const sel = tab === 'tiny' ? tSorted()[state.selectedTM]
+        : tab === 'pending' ? pending[state.selectedPending]
+        : tab === 'bench' ? models[state.selected]
+        : null;
+      const slug = sel ? '/' + slugify(sel.name) : '';
+      const next = '#' + tab + slug;
+      if (location.hash !== next) history.replaceState(null, '', next);
+    }
+
+    function applyHash() {
+      const hash = location.hash.replace(/^#\/?/, '');
+      if (!hash) return false;
+      const [tabKey, slug] = hash.split('/');
+      if (!(tabKey in TAB_IDS)) return false;
+      activateTab(tabKey, true);
+      const m = findModel(slug);
+      if (!m) return true;
+      let selRow = null;
+      if (tabKey === 'tiny') { const i = tSorted().indexOf(m); if (i >= 0) { state.selectedTM = i; } renderTinyMark(); selRow = document.querySelector('[data-tindex] .selected, tr.selected[data-tindex]'); }
+      else if (tabKey === 'pending') { const i = pending.indexOf(m); if (i >= 0) state.selectedPending = i; renderPending(); selRow = document.querySelector('tr.selected[data-pindex]'); }
+      else if (tabKey === 'bench') { const i = models.indexOf(m); if (i >= 0) state.selected = i; render(); selRow = document.querySelector('tr.selected[data-index]'); }
+      if (selRow) selRow.scrollIntoView({ block: 'center' });
+      return true;
+    }
+
+    tabButtons.forEach(tab => tab.addEventListener('click', () => {
+      activateTab(Object.keys(TAB_IDS).find(k => TAB_IDS[k] === tab.id));
     }));
+    window.addEventListener('popstate', applyHash);
 
     function setTheme(theme) { document.documentElement.dataset.theme = theme; themeToggle.textContent = theme === 'dark' ? '☼' : '☾'; themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`); localStorage.setItem('patchwork-theme', theme); }
     themeToggle.addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
@@ -1290,6 +1349,9 @@
     markSort();
     markPSort();
     markTSort();
+    // Deep link: restore tab + selected model from the URL hash before the
+    // initial render; falls through to the default view when no hash matches.
+    applyHash();
     render();
     renderPending();
     renderTinyMark();
