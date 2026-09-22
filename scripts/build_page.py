@@ -60,7 +60,7 @@ WATCHLIST_ROW_RE = re.compile(
     r"<td>.*?</td>"
     r"<td><span class=\"fit (\\w+)\">.*?</span></td></tr>", re.DOTALL)
 
-_FIELD_VALUE = re.compile(r"(?:^|[,{]\s*)(\w+):(?:'((?:[^'\\]|\\.)*)'|([\d.]+)|null)")
+_FIELD_VALUE = re.compile(r"(?:^|[,{]\s*)(\w+):(?:'((?:[^'\\]|\\.)*)'|(\[[^\]]*\])|([\d.]+)|null)")
 
 
 # ----------------------------------------------------------------- js fmt ----
@@ -71,10 +71,25 @@ def js_str(value):
     return "'" + str(value).replace("\\", "\\\\").replace("'", "\\'") + "'"
 
 
+def _score_mean(values):
+    vals = [float(v) for v in values if isinstance(v, (int, float))]
+    if not vals:
+        return None
+    return round(sum(vals) / len(vals), 1)
+
+
 def js_num(value):
-    """One-decimal JS number literal, or 'null' for None."""
+    """One-decimal JS literal for score fields.
+
+    Supports numeric scalars, numeric arrays, and None.
+    """
     if value is None:
         return "null"
+    if isinstance(value, list):
+        vals = [float(v) for v in value if isinstance(v, (int, float))]
+        if not vals:
+            return "null"
+        return "[" + ", ".join(f"{v:.1f}" for v in vals) + "]"
     return f"{float(value):.1f}"
 
 
@@ -108,12 +123,31 @@ def row_to_js(row):
         if row.get("bcb_hard") is not None:
             parts.append(f"bcb_hard:{js_num(row.get('bcb_hard'))}")
         parts.append(f"bcb_mode:{js_str(row.get('bcb_mode'))}")
+    if row.get("mbpp") is not None:
+        parts.append(f"mbpp:{js_num(row.get('mbpp'))}")
+    if row.get("mbpp_plus") is not None:
+        parts.append(f"mbpp_plus:{js_num(row.get('mbpp_plus'))}")
     parts.append(f"fit:{js_str(row.get('fit'))}")
     parts.append(f"memory:{js_str(row.get('memory'))}")
     if row.get("local") is not None:
         parts.append(f"local:{js_num(row.get('local'))}")
     if row.get("plus_source") is not None:
         parts.append(f"plus_source:{js_str(row.get('plus_source'))}")
+    # TinyMark: INCHWORM's own single-turn coding benchmark (ollama chat).
+    if row.get("tinymark") is not None:
+        parts.append(f"tinymark:{js_num(row.get('tinymark'))}")
+        parts.append(f"tinymark_js:{js_num(row.get('tinymark_js'))}")
+        parts.append(f"tinymark_py:{js_num(row.get('tinymark_py'))}")
+        parts.append(f"tinymark_model:{js_str(row.get('tinymark_model'))}")
+        parts.append(f"tinymark_harness:{js_str(row.get('tinymark_harness'))}")
+        parts.append(f"tinymark_tasks:{js_num(row.get('tinymark_tasks'))}")
+        parts.append(f"tinymark_level:{js_str(row.get('tinymark_level'))}")
+        # Advanced tiebreak (2 extra tests, run only when the base score ties
+        # another model at the top). Optional fields, so older entries omit them.
+        if row.get("tinymark_adv") is not None:
+            parts.append(f"tinymark_adv:{js_num(row.get('tinymark_adv'))}")
+        if row.get("tinymark_adv_detail") is not None:
+            parts.append(f"tinymark_adv_detail:{js_str(row.get('tinymark_adv_detail'))}")
     parts.append(f"best:{js_str(row.get('best'))}")
     parts.append(f"note:{js_str(row.get('note'))}")
     parts.append(f"url:{js_str(row.get('url'))}")
@@ -134,6 +168,27 @@ def pending_to_js(row):
     if row.get("pub_score") is not None:
         parts.append(f"pub_bench:{js_str(row.get('pub_bench'))}")
         parts.append(f"pub_score:{js_num(row.get('pub_score'))}")
+    # SWE-bench agentic scores (optional). Field name records which variant
+    # was fetched: swe_verified (Verified) vs swe_pro (Pro).
+    if row.get("swe_verified") is not None:
+        parts.append(f"swe_verified:{js_num(row.get('swe_verified'))}")
+    if row.get("swe_pro") is not None:
+        parts.append(f"swe_pro:{js_num(row.get('swe_pro'))}")
+    # TinyMark: INCHWORM's own single-turn coding benchmark (ollama chat).
+    if row.get("tinymark") is not None:
+        parts.append(f"tinymark:{js_num(row.get('tinymark'))}")
+        parts.append(f"tinymark_js:{js_num(row.get('tinymark_js'))}")
+        parts.append(f"tinymark_py:{js_num(row.get('tinymark_py'))}")
+        parts.append(f"tinymark_model:{js_str(row.get('tinymark_model'))}")
+        parts.append(f"tinymark_harness:{js_str(row.get('tinymark_harness'))}")
+        parts.append(f"tinymark_tasks:{js_num(row.get('tinymark_tasks'))}")
+        parts.append(f"tinymark_level:{js_str(row.get('tinymark_level'))}")
+        # Advanced tiebreak (2 extra tests, run only when the base score ties
+        # another model at the top). Optional fields, so older entries omit them.
+        if row.get("tinymark_adv") is not None:
+            parts.append(f"tinymark_adv:{js_num(row.get('tinymark_adv'))}")
+        if row.get("tinymark_adv_detail") is not None:
+            parts.append(f"tinymark_adv_detail:{js_str(row.get('tinymark_adv_detail'))}")
     parts.append(f"note:{js_str(row.get('note'))}")
     parts.append(f"url:{js_str(row.get('url'))}")
     return "{ " + ", ".join(parts) + " }"
@@ -150,6 +205,29 @@ def _const_block(name, rows, fmt):
 def _interior(block_text):
     """Text between the const's `[` and the closing `];`."""
     return block_text.split("[", 1)[1].rsplit("]", 1)[0]
+
+
+def _ensure_avg_badge_markup(html):
+    """Ensure HumanEval+ displays a small avg marker when score is averaged.
+
+    This keeps the UI tweak stable across rebuilds without hand-editing
+    index.html after each data regeneration.
+    """
+    changed = False
+
+    old_row = "${plus.toFixed(1)}%${m.plus_source === 'self-eval' ? '*' : ''}${dfl ? '†' : ''}</span>"
+    new_row = "${plus.toFixed(1)}%${plusN > 1 ? ' <small>avg</small>' : ''}${m.plus_source === 'self-eval' ? '*' : ''}${dfl ? '†' : ''}</span>"
+    if old_row in html:
+        html = html.replace(old_row, new_row)
+        changed = True
+
+    old_detail = "${plus != null ? plus.toFixed(1) + '%' : '—'}${dfl ? '†' : ''}</strong>"
+    new_detail = "${plus != null ? (plus.toFixed(1) + '%' + (scoreCount(m.plus) > 1 ? ' <small>avg</small>' : '')) : '—'}${dfl ? '†' : ''}</strong>"
+    if old_detail in html:
+        html = html.replace(old_detail, new_detail)
+        changed = True
+
+    return html, changed
 
 
 # ------------------------------------------------------------- html rebuild ----
@@ -198,6 +276,10 @@ def rebuild(html_path=DEFAULT_HTML, json_path=DEFAULT_JSON, dry_run=False):
                 changes.append(f"catalog badge date -> {stamp}")
                 html = dated
 
+    html, avg_changed = _ensure_avg_badge_markup(html)
+    if avg_changed:
+        changes.append("humaneval+: show avg marker for averaged scores")
+
     if not changes:
         return changes
     if dry_run:
@@ -239,9 +321,18 @@ def _js_unescape(text):
 def _parse_entry_fields(text):
     row = {}
     for mtch in _FIELD_VALUE.finditer(text):
-        field, sval, nval = mtch.group(1), mtch.group(2), mtch.group(3)
+        field, sval, aval, nval = mtch.group(1), mtch.group(2), mtch.group(3), mtch.group(4)
         if sval is not None:
             row[field] = _js_unescape(sval)
+        elif aval is not None:
+            try:
+                arr = json.loads(aval)
+                if isinstance(arr, list):
+                    row[field] = [float(v) for v in arr if isinstance(v, (int, float))]
+                else:
+                    row[field] = None
+            except (TypeError, ValueError, json.JSONDecodeError):
+                row[field] = None
         elif nval is not None:
             row[field] = float(nval) if "." in nval else int(nval)
         else:
@@ -303,10 +394,14 @@ def adopt(html_path=DEFAULT_HTML, json_path=DEFAULT_JSON, dry_run=False):
         for key, value in list(row.items()):
             if isinstance(value, float) and key != "params":
                 row[key] = round(value, 1)
+            if isinstance(value, list):
+                row[key] = [round(float(v), 1) for v in value if isinstance(v, (int, float))]
     for row in data["pending"]:
         for key, value in list(row.items()):
             if isinstance(value, float) and key != "params":
                 row[key] = round(value, 1)
+            if isinstance(value, list):
+                row[key] = [round(float(v), 1) for v in value if isinstance(v, (int, float))]
 
     data["_meta"]["description"] = (
         "Inchworm roster (canonical). Edit this file, then run "

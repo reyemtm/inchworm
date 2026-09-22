@@ -2,17 +2,18 @@
 """scrape_scores.py — refresh benchmark scores in models.json, then rebuild the page.
 
 models.json is the single source of truth for the roster. This scraper only
-touches numeric score fields there — `plus`/`base` from EvalPlus and
-`bcb`/`bcb_hard`/`bcb_mode` from BigCodeBench
+touches numeric score fields there — `plus`/`base` and `mbpp_plus` from
+EvalPlus, and `bcb`/`bcb_hard`/`bcb_mode` from BigCodeBench —
 then calls scripts/build_page.py to regenerate index.html's data consts from
 the updated models.json. Snapshot values are kept for any model a source does
 not cover, so the page is never left broken.
 
 Sources (license-safe, machine-readable):
 
-  EvalPlus leaderboard data            (HumanEval+ `plus` + HumanEval `base`)
+  EvalPlus leaderboard data            (HumanEval+ `plus` + HumanEval `base`
+                                        + MBPP+ `mbpp_plus`)
     https://raw.githubusercontent.com/evalplus/evalplus.github.io/main/results.json
-    (Apache-2.0 licensed repo; canonical pass@1 for both humaneval and humaneval+)
+    (Apache-2.0 licensed repo; canonical pass@1 for humaneval, humaneval+, mbpp+)
 
   BigCodeBench results datasets        (BigCodeBench Full `bcb` + Hard `bcb_hard`)
     https://datasets-server.huggingface.co/rows?dataset=bigcode/bigcodebench-results...
@@ -205,7 +206,7 @@ def main():
     evalplus = load_evalplus()
     bcb_full, bcb_hard = load_bigcodebench()
 
-    updated, bcb_updated, missing = [], [], []
+    updated, bcb_updated, missing, mbpp_updated = [], [], [], []
     for row in data["benchmarked"]:
         name = row.get("name")
         if not name:
@@ -215,16 +216,25 @@ def main():
         if ep_row and ep_row.get("pass@1"):
             p = ep_row["pass@1"].get("humaneval+")
             b = ep_row["pass@1"].get("humaneval")
+            mp = ep_row["pass@1"].get("mbpp+")
             new_plus = _round1(p) if isinstance(p, (int, float)) else None
             new_base = _round1(b) if isinstance(b, (int, float)) else None
+            new_mbpp_plus = _round1(mp) if isinstance(mp, (int, float)) else None
         else:
-            new_plus = new_base = None
+            new_plus = new_base = new_mbpp_plus = None
         if new_plus is not None or new_base is not None:
             updated.append((name, new_plus, new_base))
             row["plus"] = new_plus
             row["base"] = new_base
         else:
             missing.append(name)
+
+        # MBPP+ (same EvalPlus harness as HumanEval+). Only written when the
+        # feed has a value — a card-reported snapshot is kept if a model drops
+        # out of the feed.
+        if new_mbpp_plus is not None:
+            mbpp_updated.append((name, new_mbpp_plus))
+            row["mbpp_plus"] = new_mbpp_plus
 
         fv, hv, mode = bcb_lookup(bcb_full, bcb_hard, name, params)
         if fv is not None:
@@ -240,10 +250,13 @@ def main():
     print(f"BigCodeBench source: {BCB_RESULTS_DATASET} + {BCB_HARD_DATASET} "
           f"(datasets-server)")
     print(f"models: {len(data['benchmarked'])} | evalplus updated: {len(updated)} | "
+          f"mbpp+ updated: {len(mbpp_updated)} | "
           f"bigcodebench updated: {len(bcb_updated)} | "
           f"no source (snapshot kept): {len(missing)}")
     for name, p, b in updated:
         print(f"  ~ {name}: plus={p} base={b}")
+    for name, mp in mbpp_updated:
+        print(f"  ~ {name}: mbpp+={mp}")
     for name, fv, hv, mode in bcb_updated:
         print(f"  ~ {name}: bcb={fv} bcb_hard={hv} ({mode})")
     for name in missing:

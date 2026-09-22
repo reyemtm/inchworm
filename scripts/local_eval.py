@@ -63,12 +63,32 @@ MODELS = {
         "ibm-granite/granite-3.3-8b-instruct", "granite-3.3-8b-instruct",
         dict(plus=None, base=None, bcb=None),
     ),
+    "granite-4.2-3b": (
+        "ibm-granite/granite-4.2-3b", "granite-4.2-3b",
+        dict(plus=None, base=None, bcb=None),
+    ),
     "ministral-8b": (
         "mistralai/Ministral-8B-Instruct-2410", "ministral-8b-instruct-2410",
         dict(plus=None, base=None, bcb=None),
     ),
+    "ministral-3-14b": (
+        "mistralai/Ministral-3-14B-Instruct-2512", "ministral-3-14b",
+        dict(plus=None, base=None, bcb=None),
+    ),
+    "ministral-3-8b": (
+        "mistralai/Ministral-3-8B-Instruct-2512", "ministral-3-8b",
+        dict(plus=None, base=None, bcb=None),
+    ),
+    "ministral-3-3b": (
+        "mistralai/Ministral-3-3B-Instruct-2512", "ministral-3-3b",
+        dict(plus=None, base=None, bcb=None),
+    ),
     "ds-r1-distill-llama-8b": (
         "deepseek-ai/DeepSeek-R1-Distill-Llama-8B", "ds-r1-distill-llama-8b",
+        dict(plus=None, base=None, bcb=None),
+    ),
+    "qwen3.5:9b": (
+        "Qwen/Qwen-3.5-9B", "qwen3.5-9b",
         dict(plus=None, base=None, bcb=None),
     ),
 }

@@ -9,7 +9,7 @@ A laptop-level leaderboard for open coding models at **≤14B parameters**.
 ## Features
 
 - **BigCodeBench** — the primary lens (Full-set pass@1, instruct lens; `complete` for base models).
-- **HumanEval+** / **Delta** — toggleable HumanEval+ view and its delta vs. plain HumanEval.
+- **HumanEval+** / **MBPP+** — HumanEval+ (edge-case tests over HumanEval) is the sortable headline column; MBPP+ — same EvalPlus harness, a different problem set — sits alongside it in the selected-model card.
 - **Local eval** — HumanEval+ measured from our own self-evaluated runs on this machine, a directional check on vendor numbers.
 - **Local fit** — `easy` / `mid` / `heavy` / `max spec (14B, 24GB+)` tiers plus quantized memory estimates.
 - **Freshness badges** — clearly separates the current model catalog from historical HumanEval+ and BigCodeBench score snapshots.
@@ -62,3 +62,22 @@ We're running the current **8B-class batch** of HumanEval+ self-evals locally (p
 | ⏳ Queued | DeepSeek-R1-Distill-Llama-8B | — |
 
 <!-- Each model takes ~35–45 min on an M2 Pro (MPS). -->
+
+## Tiny benchmark self-test (no model calls)
+
+For fast harness validation, run the tiny benchmark in deterministic fixture mode only.
+This does not call Ollama, Hugging Face, or any model backend.
+
+```bash
+node scripts/tiny_benchmark_selftest.js
+```
+
+What it checks:
+
+- small profile
+- medium profile
+- large profile
+- result JSON schema and expected case counts
+- all direct-fixture runs pass
+
+Artifacts are written to `.eval/selftest/`.

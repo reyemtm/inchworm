@@ -1,0 +1,7 @@
+{
+  "TMB_MODEL": "qwen3.5:9b",
+  "TMB_BACKEND": "ollama",
+  "OLLAMA_HOST": "http://localhost:11434",
+  "TMB_TIMEOUT_S": "30",
+  "TMB_DEBUG": "1"
+}

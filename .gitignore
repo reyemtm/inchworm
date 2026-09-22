@@ -11,3 +11,10 @@ __pycache__/
 venv/
 Thumbs.db
 *.log
+.env
+.env.*
+!.env.example
+temp/
+results/
+LOG.jsonl
+scripts/tinymark_batch.py

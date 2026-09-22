@@ -27,7 +27,14 @@
       "note": "HumanEval+ and HumanEval entirely from our own self-evaluated run on this machine (plain chat template with thinking disabled, greedy, official EvalPlus evaluator): 81.1 / 85.4. No feed or card coverage exists, so there is no BigCodeBench value yet. A general (hybrid-thinking) model, not code-tuned — which makes the score more notable. ~10 min/sample in bf16 on MPS; allow a multi-hour run.",
       "url": "https://huggingface.co/Qwen/Qwen3-8B",
       "plus_source": "self-eval",
-      "ollama": "qwen3:8b"
+      "ollama": "qwen3:8b",
+      "tinymark": 77.5,
+      "tinymark_js": 72.5,
+      "tinymark_py": 82.5,
+      "tinymark_model": "qwen3:8b",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large"
     },
     {
       "name": "Qwen2.5-Coder-14B-Instruct",
@@ -44,7 +51,16 @@
       "best": "The top rung for local coding — only when you have 24GB+ to spare.",
       "note": "Highest scores on this page, from the Qwen2.5-Coder technical report (HumanEval+ 75.9, HumanEval 84.1). Smooth on 24GB+ unified-memory Macs or 24GB VRAM laptops (~45-60 tok/s at Q4); on 16GB machines it gets tight.",
       "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-14B-Instruct",
-      "ollama": "qwen2.5-coder:14b"
+      "ollama": "qwen2.5-coder:14b",
+      "tinymark": 88.8,
+      "tinymark_js": 85.0,
+      "tinymark_py": 92.5,
+      "tinymark_model": "qwen2.5-coder:14b",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_adv": 75.0,
+      "tinymark_adv_detail": "truncate-utf8 py 3/3 pass · number-to-words js 3/3 pass (runs=3, both harnesses)"
     },
     {
       "name": "Qwen2.5-7B-Instruct",
@@ -85,7 +101,9 @@
       "tinymark_tasks": 40,
       "tinymark_level": "large",
       "tinymark_js": 87.5,
-      "tinymark_py": 90.0
+      "tinymark_py": 90.0,
+      "tinymark_adv": 25.0,
+      "tinymark_adv_detail": "truncate-utf8 py 0/3 wrong-answer (byte/char index bug) · number-to-words js 0/3 timeout"
     },
     {
       "name": "Yi-Coder-9B-Chat",
@@ -343,7 +361,16 @@
       "best": "The reasoning-flavored 14B that redefined \"small\" — Microsoft's most capable open model.",
       "note": "A Dec 2024 generalist with unusual strength in code and math for its size. On BigCodeBench it ranks second here — behind only the code-specialized Qwen 14B — despite not being tuned for code. 14.7B total params, 16K context, MIT license. HumanEval from the model card; no strict HumanEval+ run exists.",
       "url": "https://huggingface.co/microsoft/phi-4",
-      "ollama": "phi4:14b"
+      "ollama": "phi4:14b",
+      "tinymark": 88.8,
+      "tinymark_js": 85.0,
+      "tinymark_py": 92.5,
+      "tinymark_model": "phi4:14b",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large",
+      "tinymark_adv": 50.0,
+      "tinymark_adv_detail": "truncate-utf8 py 3/3 pass · number-to-words js 0/3 timeout (its py run passes 3/3)"
     },
     {
       "name": "DeepCoder-14B-Preview",
@@ -517,7 +544,14 @@
       "type": "edge MoE (8.5B total, ~1B active)",
       "url": "https://huggingface.co/LiquidAI/LFM2.5-8B-A1B",
       "released": "2026-05",
-      "ollama": "lfm2.5:8b-a1b-q4_K_M"
+      "ollama": "lfm2.5:8b-a1b-q4_K_M",
+      "tinymark": 55.0,
+      "tinymark_js": 40.0,
+      "tinymark_py": 70.0,
+      "tinymark_model": "lfm2.5:8b-a1b-q4_K_M",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large"
     },
     {
       "name": "Ling-3.0-Tiny",
@@ -526,7 +560,15 @@
       "fit": "mid",
       "type": "hybrid reasoning MoE (7.9B total, 1.3B active)",
       "url": "https://huggingface.co/inclusionAI/Ling-3.0-tiny",
-      "released": "2026-08"
+      "released": "2026-08",
+      "ollama": "hf.co/inclusionAI/Ling-3.0-tiny-GGUF:Q4_K_M",
+      "tinymark": 83.8,
+      "tinymark_js": 90.0,
+      "tinymark_py": 77.5,
+      "tinymark_model": "hf.co/inclusionAI/Ling-3.0-tiny-GGUF:Q4_K_M",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large"
     },
     {
       "name": "Qwen3-14B",
@@ -901,7 +943,8 @@
       "fit": "mid",
       "type": "fully-open RL coding",
       "note": "Ai2 RL-Zero code model (Dolci-RL-Zero-Code dataset, fully open). No pass@1 numbers published on the card yet — only appears in our newest-model sweep.",
-      "url": "https://huggingface.co/allenai/Olmo-3.1-7B-RL-Zero-Code"
+      "url": "https://huggingface.co/allenai/Olmo-3.1-7B-RL-Zero-Code",
+      "ollama": "hf.co/mradermacher/Olmo-3.1-7B-RL-Zero-Code-GGUF:Q4_K_M"
     },
     {
       "name": "DeepSeek-R1-Distill-Qwen-1.5B",
@@ -1025,6 +1068,38 @@
       "swe_verified": 68.6,
       "note": "Small dense sibling of K2-Horizon-7B (3.7B core / 5.1B total, native 512K context, fully open). Card reports SWE-bench Verified 68.6, SciCode 25.9, Terminal-Bench 2.1 25.1 and HMMT Feb 2026 70.5, but no HumanEval or LiveCodeBench — agentic-tuned, so single-turn columns stay —. Not yet runnable in TinyMark: its GGUF declares the new k2-horizon architecture, which upstream llama.cpp (and therefore Ollama 0.34.0) cannot load.",
       "url": "https://huggingface.co/IFM/K2-Horizon-3.7B"
+    },
+    {
+      "name": "MiMo-V2.6-Distill-Qwen-9B",
+      "org": "Xiaomi MiMo",
+      "released": "2026-09",
+      "params": 9,
+      "fit": "mid",
+      "type": "agentic distill of Qwen3.5-9B (MIT)",
+      "ollama": "mimo-v2.6:9b",
+      "swe_verified": 61.1,
+      "swe_pro": 44.6,
+      "note": "Xiaomi MiMo's 9B agentic model (9.41B total), supervised-fine-tuned from Qwen3.5-9B on MiMo-generated data over a 77.4B-token mixture, MIT, released 21 Sep 2026. The card — quoting the MiMo-V2.6 technical report — reports SWE-bench Verified 61.1 and Pro 44.6 as avg@3, Terminal-Bench 2.1 37.1 and Toolathlon-Verified 35.2, but no HumanEval or LiveCodeBench, so the single-turn columns stay —. Still queued for TinyMark. The architecture is not the obstacle — its GGUF declares the same `qwen35` string as the Qwen3.5 builds Ollama already runs here — but Ollama 0.34.1 cannot pull it: every Xet-backed Hugging Face GGUF fails with `Head https://us.aws.cdn.hf.co/xet-bridge-us/...` (bartowski and ggml-org both), while a plain HEAD on the HF resolve URL returns 200. So it needs a newer Ollama, or a hand-built local model (`curl` the GGUF, `ollama create`) that the batch now benchmarks in place — as done here with `mimo-v2.6:9b`, built from bartowski's Q4_K_M GGUF, which is what the `ollama` tag points at. Its thinking block is set explicitly, which is the deliberate 30s-bar test — Phi-4-reasoning and Qwen3-4B both scored ~0 on that bar.",
+      "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B",
+      "tinymark": 65.0,
+      "tinymark_js": 70.0,
+      "tinymark_py": 60.0,
+      "tinymark_model": "mimo-v2.6:9b",
+      "tinymark_harness": "js+py",
+      "tinymark_tasks": 40,
+      "tinymark_level": "large"
+    },
+    {
+      "name": "Spark-X2.5-4B",
+      "org": "XHToken",
+      "released": "2026-08",
+      "params": 4,
+      "fit": "easy",
+      "type": "on-device agentic coder (1M ctx, hybrid attention)",
+      "swe_verified": 41.6,
+      "swe_pro": 44.4,
+      "note": "XHToken's 4.11B on-device agent (Apache-2.0, released 24 Aug 2026): hybrid attention of one full-attention layer per three sliding-window layers, native 1M-token context, post-trained for agent harnesses (Codex, Claude Code, OpenClaw, Hermes). The card's own table reports SWE-bench Verified 41.6 and Pro 44.4, τ²-bench 75.1, BFCL-V4 65.1 and MCP-Atlas 54.6 against Qwen3.5-9B; no HumanEval or LiveCodeBench, so the single-turn columns stay —. Not runnable in TinyMark yet, and not for lack of a quant: both the official GGUF and the community requant (peculiar-ragdoll/Sharp-Spark-X2.5-4B-GGUF, tuned on a coding/cyber importance matrix) declare the spark2_5 architecture, which upstream llama.cpp — and therefore Ollama — does not know, so it needs XHToken's fork or a merged PR first.",
+      "url": "https://huggingface.co/XHToken/Spark-X2.5-4B"
     }
   ],
   "candidates_no_benchmarks": {

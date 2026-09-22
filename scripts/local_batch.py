@@ -135,6 +135,9 @@ DISPLAY_NAMES = {
     "cogito-8b": "Cogito-v1-preview-llama-8B",
     "granite-3.3-8b": "Granite-3.3-8B-Instruct",
     "ministral-8b": "Ministral-8B-Instruct-2410",
+    "ministral-3-14b": "Ministral-3-14B",
+    "ministral-3-8b": "Ministral-3-8B",
+    "ministral-3-3b": "Ministral-3-3B",
     "ds-r1-distill-llama-8b": "DeepSeek-R1-Distill-Llama-8B",
 }
 
