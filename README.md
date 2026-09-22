@@ -63,21 +63,11 @@ We're running the current **8B-class batch** of HumanEval+ self-evals locally (p
 
 <!-- Each model takes ~35–45 min on an M2 Pro (MPS). -->
 
-## Tiny benchmark self-test (no model calls)
+## Local benchmark harness (private)
 
-For fast harness validation, run the tiny benchmark in deterministic fixture mode only.
-This does not call Ollama, Hugging Face, or any model backend.
-
-```bash
-node scripts/tiny_benchmark_selftest.js
-```
-
-What it checks:
-
-- small profile
-- medium profile
-- large profile
-- result JSON schema and expected case counts
-- all direct-fixture runs pass
+TinyMark's harness and problem set are intentionally **not** in this repository —
+once a benchmark's problems are public, they seep into training data and the
+scores quietly inflate. The `scripts/tiny_benchmark*.js|.py` files are kept
+local only (gitignored); `models.json` carries the resulting scores.
 
 Artifacts are written to `.eval/selftest/`.

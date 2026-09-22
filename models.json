@@ -60,7 +60,7 @@
       "tinymark_tasks": 40,
       "tinymark_level": "large",
       "tinymark_adv": 75.0,
-      "tinymark_adv_detail": "truncate-utf8 py 3/3 pass · number-to-words js 3/3 pass (runs=3, both harnesses)"
+      "tinymark_adv_detail": "2 private holdout tests, runs=3 both harnesses"
     },
     {
       "name": "Qwen2.5-7B-Instruct",
@@ -103,7 +103,7 @@
       "tinymark_js": 87.5,
       "tinymark_py": 90.0,
       "tinymark_adv": 25.0,
-      "tinymark_adv_detail": "truncate-utf8 py 0/3 wrong-answer (byte/char index bug) · number-to-words js 0/3 timeout"
+      "tinymark_adv_detail": "2 private holdout tests, runs=3 both harnesses — fails one on a byte/char index bug"
     },
     {
       "name": "Yi-Coder-9B-Chat",
@@ -370,7 +370,7 @@
       "tinymark_tasks": 40,
       "tinymark_level": "large",
       "tinymark_adv": 50.0,
-      "tinymark_adv_detail": "truncate-utf8 py 3/3 pass · number-to-words js 0/3 timeout (its py run passes 3/3)"
+      "tinymark_adv_detail": "2 private holdout tests, runs=3 both harnesses — times out on one"
     },
     {
       "name": "DeepCoder-14B-Preview",
