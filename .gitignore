@@ -25,5 +25,5 @@ scripts/tiny_benchmark_selftest.js
 # app-builder harness: kept private so live models can't read the gates
 scripts/app_planner.py
 scripts/build_test_apps.py
+scripts/ttt_parts.py
 scripts/gates/
-gallery/

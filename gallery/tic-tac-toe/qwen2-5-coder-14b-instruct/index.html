@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tic-tac-toe · Qwen2.5-Coder-14B · INCHWORM gallery</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f6f8fa; --surface: #ffffff; --border: #d0d7de;
+      --ink: #1f2328; --muted: #656d76; --green: #1a7f37;
+    }
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --canvas: #0d1117; --surface: #161b22; --border: #30363d;
+      --ink: #e6edf3; --muted: #8b949e; --green: #3fb950;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--canvas); color: var(--ink);
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .topbar {
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: blur(14px);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .nav {
+      max-width: 1012px; margin: 0 auto; padding: 10px 16px;
+      display: flex; align-items: center; gap: 12px; min-height: 36px;
+    }
+    .brand-head {
+      color: var(--green); font-weight: 800; font-size: 13px;
+      letter-spacing: .08em; display: flex; align-items: center; gap: 7px;
+      text-decoration: none;
+    }
+    .brand-mark { width: 17px; height: 17px; display: block; color: var(--green); }
+    .brand-sub { color: var(--muted); font-weight: 500; font-size: 11px; letter-spacing: .04em; }
+    .crumb { color: var(--muted); font-size: 12px; margin-left: 4px; }
+    .crumb b { color: var(--ink); font-weight: 600; }
+    .icon-btn {
+      width: 30px; height: 30px; margin-left: auto; border: 0; background: none;
+      color: var(--muted); border-radius: 7px; display: grid; place-items: center;
+      font-size: 15px; cursor: pointer;
+    }
+    .icon-btn:hover { color: var(--ink); }
+    main { max-width: 1012px; margin: 0 auto; padding: 24px 16px; width: 100%; flex: 1; }
+    .lede { color: var(--muted); font-size: 12px; margin: 0 0 14px; }
+    .lede a { color: var(--green); text-decoration: none; }
+    .frame-wrap {
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+      background: #fff; max-width: 640px; margin: 0 auto;
+    }
+    iframe { display: block; width: 100%; height: 620px; border: 0; }
+    footer {
+      border-top: 1px solid var(--border); color: var(--muted);
+      font-size: 12px; padding: 18px 16px 30px;
+    }
+    .foot-inner { max-width: 1012px; margin: 0 auto; }
+    a { color: var(--green); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand-head" href="../../../index.html">
+        <svg class="brand-mark" viewBox="0 0 512 512" aria-hidden="true"><path d="M268.0,125.0L291.0,129.0L312.0,137.0L338.0,153.0L355.0,170.0L366.0,184.0L381.0,213.0L384.0,225.0L389.0,262.0L395.0,274.0L402.0,278.0L419.0,280.0L460.0,281.0L477.0,283.0L491.0,291.0L500.0,300.0L507.0,314.0L509.0,329.0L508.0,353.0L502.0,365.0L491.0,376.0L476.0,384.0L462.0,387.0L406.0,387.0L388.0,386.0L377.0,383.0L345.0,370.0L328.0,358.0L309.0,340.0L296.0,319.0L286.0,296.0L282.0,283.0L280.0,255.0L277.0,246.0L273.0,240.0L268.0,236.0L261.0,233.0L253.0,232.0L242.0,234.0L236.0,237.0L230.0,244.0L226.0,261.0L226.0,270.0L222.0,292.0L215.0,311.0L201.0,334.0L190.0,347.0L179.0,357.0L155.0,373.0L141.0,379.0L123.0,384.0L92.0,388.0L58.0,388.0L39.0,386.0L32.0,383.0L20.0,376.0L12.0,368.0L4.0,354.0L3.0,331.0L4.0,325.0L11.0,321.0L11.0,302.0L14.0,297.0L21.0,293.0L41.0,292.0L43.0,291.0L43.0,288.0L46.0,283.0L52.0,281.0L90.0,280.0L106.0,277.0L111.0,273.0L117.0,264.0L121.0,231.0L132.0,198.0L143.0,179.0L162.0,158.0L182.0,144.0L211.0,130.0L239.0,125.0Z" fill="currentColor"/></svg>
+        INCHWORM<span class="brand-sub">Tiny LLM Benchmarks</span>
+      </a>
+      <span class="crumb">gallery / tic-tac-toe / <b>Qwen2.5-Coder-14B-Instruct</b></span>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch theme">☼</button>
+    </nav>
+  </header>
+
+  <main>
+    <p class="lede">
+      Tic-tac-toe with a blocking CPU, built by <b>Qwen2.5-Coder-14B-Instruct</b> (9GB, 4-bit, on a laptop).
+      The whole engine — win detection, board status, legal moves and the CPU's reply — is the model's own
+      code, written one function at a time against a fixed contract and graded mechanically: 4/4 parts at
+      pass@3, blocking all 24 threat shapes. The grid, rendering and reset are harness code.
+      <a href="../../../index.html#bench/qwen2-5-coder-14b-instruct">Back to its leaderboard card ↗</a>
+    </p>
+    <div class="frame-wrap">
+      <iframe title="Tic-tac-toe by Qwen2.5-Coder-14B-Instruct — play it: you are X, the CPU blocks" src="game.html"></iframe>
+    </div>
+  </main>
+
+  <footer>
+    <div class="foot-inner">
+      Part of the <a href="../../../index.html">INCHWORM</a> app-builder gallery: models scored on TinyMark are asked to
+      build small apps. Asking for one pure function at a time against a fixed host is what made this one land —
+      the same model never produced a correct blocking CPU in fifteen whole-app attempts. Nothing here is hand-edited:
+      every function is model output, and the score comes from a Node gate, not an opinion.
+    </div>
+  </footer>
+
+  <script>
+    const setTheme = t => {
+      document.documentElement.dataset.theme = t;
+      document.getElementById('theme-toggle').textContent = t === 'dark' ? '☼' : '☾';
+      try { localStorage.setItem('patchwork-theme', t); } catch (e) {}
+    };
+    document.getElementById('theme-toggle').addEventListener('click', () =>
+      setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+    setTheme(localStorage.getItem('patchwork-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  </script>
+</body>
+</html>

@@ -148,6 +148,11 @@ def row_to_js(row):
             parts.append(f"tinymark_adv:{js_num(row.get('tinymark_adv'))}")
         if row.get("tinymark_adv_detail") is not None:
             parts.append(f"tinymark_adv_detail:{js_str(row.get('tinymark_adv_detail'))}")
+    # App-builder gallery links: {task: path} for each generated app published
+    # under gallery/. Optional; most entries omit it.
+    g = row.get("gallery")
+    if isinstance(g, dict) and g:
+        parts.append("gallery:" + json.dumps({k: str(v) for k, v in sorted(g.items())}, sort_keys=True))
     parts.append(f"best:{js_str(row.get('best'))}")
     parts.append(f"note:{js_str(row.get('note'))}")
     parts.append(f"url:{js_str(row.get('url'))}")
@@ -189,6 +194,9 @@ def pending_to_js(row):
             parts.append(f"tinymark_adv:{js_num(row.get('tinymark_adv'))}")
         if row.get("tinymark_adv_detail") is not None:
             parts.append(f"tinymark_adv_detail:{js_str(row.get('tinymark_adv_detail'))}")
+    g = row.get("gallery")
+    if isinstance(g, dict) and g:
+        parts.append("gallery:" + json.dumps({k: str(v) for k, v in sorted(g.items())}, sort_keys=True))
     parts.append(f"note:{js_str(row.get('note'))}")
     parts.append(f"url:{js_str(row.get('url'))}")
     return "{ " + ", ".join(parts) + " }"

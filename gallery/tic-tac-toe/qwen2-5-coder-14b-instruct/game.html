@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tic-tac-toe · qwen2.5-coder:14b · part bench</title>
+<style>
+  :root { color-scheme: light; --canvas:#f6f8fa; --surface:#fff; --border:#d0d7de; --ink:#1f2328; --muted:#656d76; --green:#1a7f37; }
+  [data-theme="dark"] { color-scheme: dark; --canvas:#0d1117; --surface:#161b22; --border:#30363d; --ink:#e6edf3; --muted:#8b949e; --green:#3fb950; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 40px; background:var(--canvas); color:var(--ink);
+         font:15px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+         display:flex; flex-direction:column; align-items:center; }
+  h1 { font-size:1rem; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:.8rem; margin-bottom:16px; text-align:center; }
+  #status { min-height:1.5em; margin-bottom:12px; color:var(--green); font-weight:600; }
+  #board { display:grid; grid-template-columns:repeat(3,84px); gap:6px; }
+  .cell { width:84px; height:84px; font:700 40px/1 inherit; background:var(--surface);
+          color:var(--ink); border:1px solid var(--border); border-radius:8px; cursor:pointer; }
+  .cell:disabled { cursor:default; opacity:.9; }
+  button#reset { margin-top:16px; padding:8px 16px; font:inherit; background:var(--surface);
+                 color:var(--ink); border:1px solid var(--border); border-radius:6px; cursor:pointer; }
+  footer { margin-top:24px; color:var(--muted); font-size:.75rem; max-width:360px; text-align:center; }
+</style>
+</head>
+<body>
+<h1>Tic-tac-toe</h1>
+<div class="sub">qwen2.5-coder:14b · scaffolded host, model-written parts</div>
+<div id="status"></div>
+<div id="board"></div>
+<button id="reset">New game</button>
+<footer>Parts supplied by the host: <span id="parts"></span>. Everything else — grid, render,
+clicks, reset — is harness code, identical for every model.</footer>
+<script type="module">
+function checkWin(board) {
+  const winningLines = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6]             // Diagonals
+  ];
+
+  for (let line of winningLines) {
+    const [a, b, c] = line;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return board[a];
+    }
+  }
+
+  return null;
+}
+function status(board) {
+  const winningLines = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+    [0, 4, 8], [2, 4, 6]            // diagonals
+  ];
+
+  for (let line of winningLines) {
+    const [a, b, c] = line;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return board[a];
+    }
+  }
+
+  if (board.every(cell => cell !== '')) {
+    return 'draw';
+  }
+
+  return 'playing';
+}
+function legalMoves(board) {
+  const moves = [];
+  for (let i = 0; i < board.length; i++) {
+    if (board[i] === '') {
+      moves.push(i);
+    }
+  }
+  return moves;
+}
+function nextMove(board, me) {
+    const opponent = me === 'X' ? 'O' : 'X';
+    const winningLines = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6]           // diagonals
+    ];
+
+    function checkLine(line, player) {
+        let emptyIndex = -1;
+        let count = 0;
+        for (const index of line) {
+            if (board[index] === player) {
+                count++;
+            } else if (board[index] === '') {
+                emptyIndex = index;
+            }
+        }
+        return count === 2 && emptyIndex !== -1 ? emptyIndex : null;
+    }
+
+    for (const line of winningLines) {
+        const winningIndex = checkLine(line, me);
+        if (winningIndex !== null) {
+            return winningIndex;
+        }
+    }
+
+    for (const line of winningLines) {
+        const blockingIndex = checkLine(line, opponent);
+        if (blockingIndex !== null) {
+            return blockingIndex;
+        }
+    }
+
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === '') {
+            return i;
+        }
+    }
+
+    return null;
+}
+const MODEL_PARTS = ["checkWin", "status", "legalMoves", "nextMove"];
+document.getElementById('parts').textContent = MODEL_PARTS.length ? MODEL_PARTS.join(', ') : 'none (all reference)';
+const cells = [];
+const boardEl = document.getElementById('board');
+for (let i = 0; i < 9; i++) {
+  const b = document.createElement('button');
+  b.className = 'cell'; b.dataset.index = i;
+  b.addEventListener('click', () => play(i));
+  cells.push(b); boardEl.appendChild(b);
+}
+const statusEl = document.getElementById('status');
+let board = Array(9).fill(''), done = false;
+function say(t) { statusEl.textContent = t; }
+function paint() {
+  for (let i = 0; i < 9; i++) {
+    cells[i].textContent = board[i];
+    cells[i].disabled = done || board[i] !== '';
+  }
+}
+function finish() {
+  const s = status(board);
+  if (s === 'playing') return false;
+  done = true;
+  say(s === 'draw' ? 'Draw.' : (s === 'X' ? 'X (you) wins.' : 'O (CPU) wins.'));
+  paint();
+  return true;
+}
+function play(i) {
+  if (done || board[i] !== '') return;
+  board[i] = 'X'; paint();
+  if (finish()) return;
+  const mv = nextMove(board, 'O');
+  if (typeof mv === 'number' && board[mv] === '') { board[mv] = 'O'; paint(); }
+  finish();
+}
+function reset() { board = Array(9).fill(''); done = false; paint(); say('Your turn — you are X.'); }
+// Optional frozen position for the DOM check: ?board=X,X,,,,,,, hands the CPU
+// (O) the job of answering a known threat, with no clicks and no randomness.
+function preset() {
+  const q = new URLSearchParams(location.search).get('board');
+  if (!q) return false;
+  const parts = q.split(',').map(v => (v === 'X' || v === 'O') ? v : '');
+  if (parts.length !== 9) return false;
+  board = parts; done = false; paint();
+  if (status(board) === 'playing') {
+    const mv = nextMove(board, 'O');
+    if (typeof mv === 'number' && board[mv] === '') { board[mv] = 'O'; paint(); }
+  }
+  if (!finish()) say('Frozen position — the CPU has answered.');
+  return true;
+}
+document.getElementById('reset').addEventListener('click', reset);
+if (!preset()) reset();
+</script>
+</body>
+</html>
