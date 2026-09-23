@@ -60,7 +60,10 @@
       "tinymark_tasks": 40,
       "tinymark_level": "large",
       "tinymark_adv": 75.0,
-      "tinymark_adv_detail": "2 private holdout tests, runs=3 both harnesses"
+      "tinymark_adv_detail": "2 private holdout tests, runs=3 both harnesses",
+      "gallery": {
+        "tictactoe": "gallery/tic-tac-toe/qwen2-5-coder-14b-instruct/"
+      }
     },
     {
       "name": "Qwen2.5-7B-Instruct",
@@ -1079,7 +1082,7 @@
       "ollama": "mimo-v2.6:9b",
       "swe_verified": 61.1,
       "swe_pro": 44.6,
-      "note": "Xiaomi MiMo's 9B agentic model (9.41B total), supervised-fine-tuned from Qwen3.5-9B on MiMo-generated data over a 77.4B-token mixture, MIT, released 21 Sep 2026. The card — quoting the MiMo-V2.6 technical report — reports SWE-bench Verified 61.1 and Pro 44.6 as avg@3, Terminal-Bench 2.1 37.1 and Toolathlon-Verified 35.2, but no HumanEval or LiveCodeBench, so the single-turn columns stay —. Still queued for TinyMark. The architecture is not the obstacle — its GGUF declares the same `qwen35` string as the Qwen3.5 builds Ollama already runs here — but Ollama 0.34.1 cannot pull it: every Xet-backed Hugging Face GGUF fails with `Head https://us.aws.cdn.hf.co/xet-bridge-us/...` (bartowski and ggml-org both), while a plain HEAD on the HF resolve URL returns 200. So it needs a newer Ollama, or a hand-built local model (`curl` the GGUF, `ollama create`) that the batch now benchmarks in place — as done here with `mimo-v2.6:9b`, built from bartowski's Q4_K_M GGUF, which is what the `ollama` tag points at. Its thinking block is set explicitly, which is the deliberate 30s-bar test — Phi-4-reasoning and Qwen3-4B both scored ~0 on that bar.",
+      "note": "Xiaomi's 9B Qwen3.5-distilled agentic coder (MIT, Sep 2026). Card reports SWE-bench Verified 61.1 / Pro 44.6, Terminal-Bench 37.1 — no HumanEval/LiveCodeBench, so those columns stay —. Tinymarked locally via a hand-built `mimo-v2.6:9b` (bartowski Q4_K_M; stock Ollama can't pull the Xet-backed GGUF). Thinking output against the 30s bar.",
       "url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B",
       "tinymark": 65.0,
       "tinymark_js": 70.0,
