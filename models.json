@@ -60,10 +60,7 @@
       "tinymark_tasks": 40,
       "tinymark_level": "large",
       "tinymark_adv": 75.0,
-      "tinymark_adv_detail": "2 private holdout tests, runs=3 both harnesses",
-      "gallery": {
-        "tictactoe": "gallery/tic-tac-toe/qwen2-5-coder-14b-instruct/"
-      }
+      "tinymark_adv_detail": "2 private holdout tests, runs=3 both harnesses"
     },
     {
       "name": "Qwen2.5-7B-Instruct",
