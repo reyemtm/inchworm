@@ -1160,7 +1160,7 @@
       const keys = Object.keys(g).sort();
       if (!keys.length) return '';
       return '<div class="card-apps">' + keys.map(k =>
-        `<a class="app-pill" href="${g[k]}" target="_blank" rel="noreferrer">▶ Play its ${APP_LABELS[k] || k}</a>`).join('') + '</div>';
+        `<a class="app-pill" href="${g[k]}">▶ Play its ${APP_LABELS[k] || k}</a>`).join('') + '</div>';
     }
     function sweCell(m) {
       const bits = [];
