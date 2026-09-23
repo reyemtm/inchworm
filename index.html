@@ -659,6 +659,31 @@
       font-size: 12px;
     }
 
+    /* Generated-app pills sit directly under the model title, so a playable
+       result is visible before any of the numbers. */
+    .card-apps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .app-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border: 1px solid var(--green);
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+
+    .app-pill:hover { border-color: var(--green-bright); color: var(--green-bright); }
+
 
     footer {
       padding: 28px 0 44px;
@@ -1125,14 +1150,17 @@
       body.querySelectorAll('tr[data-index]').forEach(row => row.addEventListener('click', () => { state.selected = Number(row.dataset.index); render(); syncHash(); }));
       renderDetail();
     }
-    function renderDetail() { const m = models[state.selected]; const plus = scoreAvg(m.plus); const mbpp = scoreAvg(m.mbpp_plus); const bcb = scoreAvg(m.bcb); const bcbHard = scoreAvg(m.bcb_hard); const dfl = conflicts(m); const agr = agreeing(m); const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—'); detail.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params} parameters${relSub(m)}</div><div class="detail-fit"><strong>${labels[m.fit]}${m.fit === 'max' ? '' : ' for most laptops'}</strong><span>${m.memory} memory estimate for a 4-bit quantization.</span></div><div class="detail-grid"><div class="detail-metric"><small>HumanEval+${dfl ? ' · conflict' : agr ? ' · verified' : ''}</small><strong class="${plus != null ? tier(plus) : ''}${dfl ? ' conflict' : ''}"${dfl ? ` title="Published avg ${plus.toFixed(1)}% conflicts with our local run (${m.local.toFixed(1)}%)"` : agr ? ` title="Published avg ${plus.toFixed(1)}% verified by our local run (${m.local.toFixed(1)}%, within ${DISPUTE} points)"` : ''}>${plus != null ? (plus.toFixed(1) + '%' + (scoreCount(m.plus) > 1 ? ' <small>avg</small>' : '')) : '—'}${dfl ? '†' : ''}</strong>${dfl ? `<span class="subscore">local run: ${m.local.toFixed(1)}%</span>` : ''}</div><div class="detail-metric"><small>MBPP+</small><strong>${mbpp != null ? mbpp.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>BigCodeBench${m.bcb_mode ? ` · ${m.bcb_mode}` : ''}</small><strong>${bcb != null ? bcb.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>BigCodeBench hard</small><strong>${bcbHard != null ? bcbHard.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>Quantized size</small><strong>${m.memory.split(' ')[0]}</strong></div></div><p><strong>Best for:</strong> ${m.best}</p><p>${m.note}</p>${galleryLink(m)}<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a></div>`; }
-    // Generated apps live in gallery/ (task -> path). Rendered as a link only
-    // for models that actually have one, so the card stays clean otherwise.
+    function renderDetail() { const m = models[state.selected]; const plus = scoreAvg(m.plus); const mbpp = scoreAvg(m.mbpp_plus); const bcb = scoreAvg(m.bcb); const bcbHard = scoreAvg(m.bcb_hard); const dfl = conflicts(m); const agr = agreeing(m); const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—'); detail.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params} parameters${relSub(m)}</div>${appsRow(m)}<div class="detail-fit"><strong>${labels[m.fit]}${m.fit === 'max' ? '' : ' for most laptops'}</strong><span>${m.memory} memory estimate for a 4-bit quantization.</span></div><div class="detail-grid"><div class="detail-metric"><small>HumanEval+${dfl ? ' · conflict' : agr ? ' · verified' : ''}</small><strong class="${plus != null ? tier(plus) : ''}${dfl ? ' conflict' : ''}"${dfl ? ` title="Published avg ${plus.toFixed(1)}% conflicts with our local run (${m.local.toFixed(1)}%)"` : agr ? ` title="Published avg ${plus.toFixed(1)}% verified by our local run (${m.local.toFixed(1)}%, within ${DISPUTE} points)"` : ''}>${plus != null ? (plus.toFixed(1) + '%' + (scoreCount(m.plus) > 1 ? ' <small>avg</small>' : '')) : '—'}${dfl ? '†' : ''}</strong>${dfl ? `<span class="subscore">local run: ${m.local.toFixed(1)}%</span>` : ''}</div><div class="detail-metric"><small>MBPP+</small><strong>${mbpp != null ? mbpp.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>BigCodeBench${m.bcb_mode ? ` · ${m.bcb_mode}` : ''}</small><strong>${bcb != null ? bcb.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>BigCodeBench hard</small><strong>${bcbHard != null ? bcbHard.toFixed(1) + '%' : '—'}</strong></div><div class="detail-metric"><small>Quantized size</small><strong>${m.memory.split(' ')[0]}</strong></div></div><p><strong>Best for:</strong> ${m.best}</p><p>${m.note}</p><a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a></div>`; }
+    // Generated apps live in gallery/ (task -> path). Rendered as pills right
+    // under the model title — only for models that have one, so every card
+    // without a playable result stays visually unchanged.
     const APP_LABELS = { tictactoe: 'tic-tac-toe', hangman: 'hangman', todo: 'todo list' };
-    function galleryLink(m) {
+    function appsRow(m) {
       const g = m.gallery || {};
-      return Object.keys(g).sort().map(k =>
-        `<a class="detail-link" href="${g[k]}" target="_blank" rel="noreferrer">Play its generated ${APP_LABELS[k] || k} ↗</a>`).join('');
+      const keys = Object.keys(g).sort();
+      if (!keys.length) return '';
+      return '<div class="card-apps">' + keys.map(k =>
+        `<a class="app-pill" href="${g[k]}" target="_blank" rel="noreferrer">▶ Play its ${APP_LABELS[k] || k}</a>`).join('') + '</div>';
     }
     function sweCell(m) {
       const bits = [];
@@ -1174,7 +1202,7 @@
       const params = typeof m.params === 'number' ? `${m.params}B` : (m.params || '—');
       const rel = m.released ? fmtRel(m.released) : '—';
       const pub = (m.pub_score != null) ? `<span class="score">${m.pub_score.toFixed(1)}%</span><span class="subscore">card · ${m.pub_bench || 'LiveCodeBench'}</span>` : '<span class="score">—</span>';
-      pd.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params}${m.released ? ' · released ' + fmtRel(m.released) : ''}</div><div class="detail-fit"><strong>${labels[m.fit]}</strong><span>${m.fit === 'max' ? 'Max spec tier — assumes 24GB+ unified memory or VRAM.' : 'Typical fit for running this model locally.'}</span></div><div class="detail-grid"><div class="detail-metric"><small>Params</small><strong>${params}</strong></div><div class="detail-metric"><small>Released</small><strong>${rel}</strong></div><div class="detail-metric"><small>${m.pub_bench || 'Published'}</small>${pub}</div><div class="detail-metric"><small>SWE-bench</small>${sweCell(m)}</div><div class="detail-metric"><small>TinyMark</small>${tmCell(m)}</div><div class="detail-metric"><small>Local fit</small><strong>${labels[m.fit]}</strong></div></div>${m.note ? `<p>${m.note}</p>` : ''}${m.url ? `<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a>` : ''}</div>`;
+      pd.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params}${m.released ? ' · released ' + fmtRel(m.released) : ''}</div>${appsRow(m)}<div class="detail-fit"><strong>${labels[m.fit]}</strong><span>${m.fit === 'max' ? 'Max spec tier — assumes 24GB+ unified memory or VRAM.' : 'Typical fit for running this model locally.'}</span></div><div class="detail-grid"><div class="detail-metric"><small>Params</small><strong>${params}</strong></div><div class="detail-metric"><small>Released</small><strong>${rel}</strong></div><div class="detail-metric"><small>${m.pub_bench || 'Published'}</small>${pub}</div><div class="detail-metric"><small>SWE-bench</small>${sweCell(m)}</div><div class="detail-metric"><small>TinyMark</small>${tmCell(m)}</div><div class="detail-metric"><small>Local fit</small><strong>${labels[m.fit]}</strong></div></div>${m.note ? `<p>${m.note}</p>` : ''}${m.url ? `<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a>` : ''}</div>`;
     }
     function tmSrc(m) { if (Array.isArray(m.plus)) return m.plus.reduce((a, b) => a + b, 0) / m.plus.length; return (m.plus != null ? m.plus : m.pub_score); }
     function rankArr(v) { const s = [...v].sort((a, b) => a - b); return v.map(x => s.indexOf(x) + 1); }
@@ -1231,7 +1259,7 @@
         ? `<div class="detail-metric"><small>Adv tiebreak</small><strong>${m.tinymark_adv.toFixed(1)}%</strong></div>`
         : '';
       const advNote = m.tinymark_adv_detail ? `<p class="mono">Advanced tiebreak: ${m.tinymark_adv_detail}</p>` : '';
-      td.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params}${relSub(m)}</div><div class="detail-fit"><strong>${labels[m.fit]}</strong><span>${m.fit === 'max' ? 'Max spec tier — assumes 24GB+ unified memory or VRAM.' : 'Typical fit for running this model locally.'}</span></div><div class="detail-grid"><div class="detail-metric"><small>TinyMark</small><strong>${m.tinymark.toFixed(1)}%</strong></div><div class="detail-metric"><small>Tasks</small><strong>${tasks}</strong></div>${advMetric}${splitMetrics}<div class="detail-metric"><small>Level</small><strong>${m.tinymark_level || '—'}</strong></div><div class="detail-metric"><small>Ollama model</small><strong>${m.tinymark_model || '—'}</strong></div><div class="detail-metric"><small>Harness</small><strong>${m.tinymark_harness || '—'}</strong></div><div class="detail-metric"><small>Local fit</small><strong>${labels[m.fit]}</strong></div></div>${advNote}${m.note ? `<p>${m.note}</p>` : ''}${m.url ? `<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a>` : ''}</div>`;
+      td.innerHTML = `<div class="detail-inner"><div class="detail-kicker">Selected model</div><h3>${m.name}</h3><div class="detail-org">${m.org} · ${params}${relSub(m)}</div>${appsRow(m)}<div class="detail-fit"><strong>${labels[m.fit]}</strong><span>${m.fit === 'max' ? 'Max spec tier — assumes 24GB+ unified memory or VRAM.' : 'Typical fit for running this model locally.'}</span></div><div class="detail-grid"><div class="detail-metric"><small>TinyMark</small><strong>${m.tinymark.toFixed(1)}%</strong></div><div class="detail-metric"><small>Tasks</small><strong>${tasks}</strong></div>${advMetric}${splitMetrics}<div class="detail-metric"><small>Level</small><strong>${m.tinymark_level || '—'}</strong></div><div class="detail-metric"><small>Ollama model</small><strong>${m.tinymark_model || '—'}</strong></div><div class="detail-metric"><small>Harness</small><strong>${m.tinymark_harness || '—'}</strong></div><div class="detail-metric"><small>Local fit</small><strong>${labels[m.fit]}</strong></div></div>${advNote}${m.note ? `<p>${m.note}</p>` : ''}${m.url ? `<a class="detail-link" href="${m.url}" target="_blank" rel="noreferrer">Open model card ↗</a>` : ''}</div>`;
     }
     document.querySelectorAll('[data-sort]').forEach(th => th.addEventListener('click', () => applySort(th.dataset.sort)));
     document.querySelectorAll('[data-psort]').forEach(th => th.addEventListener('click', () => applyPSort(th.dataset.psort)));
